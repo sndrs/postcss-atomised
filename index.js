@@ -6,8 +6,6 @@ import mkdirp from 'mkdirp-promise';
 
 // CSS stuff
 import sass from 'node-sass';
-import prettyBytes from 'pretty-bytes';
-import gzipSize from 'gzip-size';
 
 // our modules
 import atomiciseCSS from './lib/atomicise-css';
@@ -26,7 +24,6 @@ glob('src/stylesheets/**/!(_)*.scss')
             save(`${outDir}/class-map.json`, JSON.stringify(atomicMap, null, 4));
             save(`${outDir}/styles.css`, atomicCSS);
             console.log(`It's saved!`);
-            console.log(`${atomicCSS.split('.').length - 1} classes, ${prettyBytes(gzipSize.sync(atomicCSS))} (gzipped).`);
         })
     })
     .catch(e => console.log(e));
