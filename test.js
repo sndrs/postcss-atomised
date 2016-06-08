@@ -1,5 +1,5 @@
 import test from 'ava';
-import atomiseCSS from './lib/atomise-css';
+import atomiseCSS from './index';
 
 import {readFileSync} from 'fs';
 import postcss from "postcss";
