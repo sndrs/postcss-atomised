@@ -1,66 +1,21 @@
 import test from 'ava';
-import atomiciseCSS from './lib/atomicise-css';
+import atomiseCSS from './lib/atomise-css';
+
+import {readFileSync} from 'fs';
 import postcss from "postcss";
+import perfectionist from "perfectionist";
 
-const parseCSS = css => postcss().process(css).root.nodes.map(rule => {
-    const {selector, nodes} = rule;
-    const declarations = nodes.map(declaration => {
-        const {prop, value} = declaration;
-        return {prop, value};
-    });
-    return {selector, declarations};
-})
+const fixture = check => `./test/fixtures/${check}`;
 
-test('dedupe styles', t => {
-    return atomiciseCSS(`
-        .x {
-            color: red;
-            color: red;
-        }
-    `).then(({atomicCSS, atomicMap}) => {
-        t.deepEqual(atomicMap, {x: ['a']});
-        t.deepEqual(parseCSS(atomicCSS), [{
-            "selector": ".a",
-            "declarations": [
-                {
-                    "prop": "color",
-                    "value": "red"
-                }
-            ]
-        }])
-    });
-});
+const atomise = check => atomiseCSS(readFileSync(`${fixture(check)}/src.css`, 'utf8'));
+const expectedCSS = check => postcss([perfectionist({format: 'compact'})])
+    .process(readFileSync(`${fixture(check)}/expected.css`, 'utf8'))
+    .css;
+const expectedMap = check => require(`${fixture(check)}/expected.json`);
 
-test('expand chained selectors', t => {
-    return atomiciseCSS(`
-        .x, .y {
-            color: red;
-        }
-        .y {
-            height: 0;
-        }
-    `).then(({atomicCSS, atomicMap}) => {
-        console.log(atomicMap);
-        t.deepEqual(atomicMap, {
-            x: ['a'],
-            y: ['a', 'b']
-        });
-        t.deepEqual(parseCSS(atomicCSS), [{
-            "selector": ".a",
-            "declarations": [
-                {
-                    "prop": "color",
-                    "value": "red"
-                }
-            ]
-        }, {
-            "selector": ".b",
-            "declarations": [
-                {
-                    "prop": "height",
-                    "value": "0"
-                }
-            ]
-        }])
-    });
+['dedupe', 'chained', 'mq'].forEach(check => {
+    test(t => atomise(check).then(({atomicCSS, atomicMap}) => {
+        t.is(atomicCSS, expectedCSS(check));
+        t.deepEqual(atomicMap, expectedMap(check));
+    }));
 });

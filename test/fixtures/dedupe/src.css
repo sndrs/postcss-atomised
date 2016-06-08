@@ -1,0 +1,6 @@
+.chained-1, .chained-2 {
+    color: red;
+}
+.chained-2 {
+    height: 0;
+}
