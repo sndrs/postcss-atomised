@@ -4,29 +4,29 @@ PoC that creates an atomised stylesheet from a standard one, and provides a json
 
 So this:
 ```CSS
-.thing1 {
+.thing {
     background-color: red;
 }
-.thing2 {
+.thing--flat {
     background-color: red;
     line-height: 0;
 }
 ```
-is turned into this:
+becomes this:
 ```CSS
 .a { background-color: red; }
 .b { line-height: 0; }
 ```
 ```JSON
 {
-    "thing1": ["a"],
-    "thing2": ["a", "b"]
+    "thing": ["a"],
+    "thing--flat": ["a", "b"]
 }
 ```
-The idea is that you would inline the atomic CSS on a page, and then do the following in a build step for production:
+The idea is that in production, you would inline the atomic CSS and then do the following:
 ```HTML
-<div class="thing1"></div>
-<div class="thing2"></div>
+<div class="thing"></div>
+<div class="thing--flat"></div>
 ```
 with
 ```HTML
@@ -34,7 +34,7 @@ with
 <div class="a b"></div>
 ```
 
-This means you should end up with the smalled possible CSS while being able to write it as normal.
+This means you should get the benefits of atomic CSS classes, while being able to write CSS as normal.
 
 Note that elements must have only one class for it to work, and only class selectors can be used.
 
