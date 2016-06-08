@@ -1,6 +1,6 @@
-# Exploded classes
+# Atomised CSS
 
-PoC that creates an atomicised stylesheet from a standard one, and provides a json map from the original classes to the atomic ones.
+PoC that creates an atomised stylesheet from a standard one, and provides a json map from the original classes to the atomic ones.
 
 ## To do
 - [ ] pseudo selectors

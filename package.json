@@ -36,5 +36,19 @@
     "require": [
       "babel-register"
     ]
-  }
+  },
+  "name": "atomised-css",
+  "description": "PoC that creates an atomised stylesheet from a standard one, and provides a json map from the original classes to the atomic ones.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sndrs/atomised-css.git"
+  },
+  "author": "Alex Sanders <a@snd.rs>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sndrs/atomised-css/issues"
+  },
+  "homepage": "https://github.com/sndrs/atomised-css#readme"
 }
