@@ -4,16 +4,16 @@
 .d { color: green; }
 .e { content: 'mq@root'; }
 .f { content: 'no-mq@root'; }
-@media (min-width:10px) {
+@media (min-width: 10px) {
  .a-a { color: blue; }
  .a-b { color: hotpink; }
  .a-c { content: 'mq@10px'; }
 }
-@media (min-width:100px) {
+@media (min-width: 100px) {
  .c-a { color: orange; }
  .c-b { content: 'mq@100px'; }
 }
-@media (min-width:1000px) {
- .b-a { color: #ff0; }
+@media (min-width: 1000px) {
+ .b-a { color: yellow; }
  .b-b { content: 'mq@1000px'; }
 }

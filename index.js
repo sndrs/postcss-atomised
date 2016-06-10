@@ -20,7 +20,7 @@ const getDeclarations = (rule, atrule = false) => {
         const {prop, value} = declaration;
         return {prop, value, hash: hash.unique(`${prop}${value}${atrule}`)};
     });
-    return {selector: selector.replace(/\./g, '').split(','), declarations};
+    return {selector: selector.replace(/\./g, '').split(', '), declarations};
 }
 
 const CSSfromAST = declarationsForAtrule => _.map(declarationsForAtrule, declaration => {
@@ -33,11 +33,7 @@ const CSSfromAST = declarationsForAtrule => _.map(declarationsForAtrule, declara
 const debug = _ => console.log(JSON.stringify(_, null, 4));
 
 export default function atomiseCSS (css) {
-    return postcss([nano({
-            mergeLonghand: false,
-            svgo: false,
-            zindex: false
-        })]).process(css)
+    return postcss([perfectionist({format: 'compact'})]).process(css)
     .then(AST => {
         return AST.root.nodes.reduce((atrules, rule) => {
             let atrule;
