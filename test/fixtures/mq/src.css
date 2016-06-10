@@ -1,0 +1,43 @@
+.mq, .mq2 {
+    color: red;
+    content: 'mq@root';
+}
+
+.mq {
+    color: hotpink;
+}
+
+.no-mq-1 {
+    color: blue;
+    content: 'no-mq@root';
+}
+
+.no-mq-2 {
+    color: green;
+    content: 'no-mq@root';
+}
+
+@media (min-width: 10px) {
+    .mq {
+        color: blue;
+        content: 'mq@10px';
+    }
+    .mq2 {
+        color: hotpink;
+        content: 'mq@10px';
+    }
+}
+
+@media (min-width: 1000px) {
+    .mq {
+        color: yellow;
+        content: 'mq@1000px';
+    }
+}
+
+@media (min-width: 100px) {
+    .mq {
+        color: orange;
+        content: 'mq@100px';
+    }
+}

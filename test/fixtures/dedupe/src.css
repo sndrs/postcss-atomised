@@ -1,6 +1,4 @@
-.chained-1, .chained-2 {
+.dedupe {
     color: red;
-}
-.chained-2 {
-    height: 0;
+    color: red;
 }

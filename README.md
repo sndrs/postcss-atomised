@@ -45,6 +45,5 @@ It uses PostCSS, so [their caveat](https://github.com/postcss/postcss#nodejs-010
 
 ## To do
 - [ ] pseudo selectors
-- [ ] media queries
+- [x] media queries
 - [ ] scoping classes?
-- [ ] public classes?

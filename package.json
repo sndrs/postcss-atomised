@@ -30,7 +30,8 @@
       "test.js"
     ],
     "source": [
-      "lib/*.js"
+      "index.js",
+      "test/**/*"
     ],
     "require": [
       "babel-register"
