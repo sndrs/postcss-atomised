@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import hash from 'shorthash';
 import postcss from "postcss";
-import remify from 'postcss-pxtorem';
 import nano from "cssnano";
 import autoprefixer from "autoprefixer";
 import mqpacker from "css-mqpacker";
@@ -34,12 +33,7 @@ const CSSfromAST = declarationsForAtrule => _.map(declarationsForAtrule, declara
 const debug = _ => console.log(JSON.stringify(_, null, 4));
 
 export default function atomiseCSS (css) {
-    return postcss([remify({
-            replace: true,
-            root_value: 16,
-            unit_precision: 5,
-            prop_white_list: []
-        }), nano({
+    return postcss([nano({
             mergeLonghand: false,
             svgo: false,
             zindex: false
