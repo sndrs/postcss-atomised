@@ -100,7 +100,7 @@ export default function atomiseCSS (css) {
         // debug(atomicDeclarationsByAtrule);
 
         const atomicDeclarations = _.reduce(atomicDeclarationsByAtrule, (atomicDeclarations, atrule) => {
-            Object.assign(atomicDeclarations, atrule);
+            _.assign(atomicDeclarations, atrule);
             return atomicDeclarations;
         }, {});
 
