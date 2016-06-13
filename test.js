@@ -1,7 +1,7 @@
 import test from 'ava';
 import atomiseCSS from './index';
 
-import {readFileSync} from 'fs';
+import {readFileSync, readdirSync} from 'fs';
 import postcss from "postcss";
 import perfectionist from "perfectionist";
 
@@ -13,8 +13,8 @@ const expectedCSS = check => postcss([perfectionist({format: 'compact'})])
     .css;
 const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
 
-['chained', 'dedupe', 'mq'].forEach(check => {
-    test(t => atomise(check).then(({atomicCSS, atomicMap}) => {
+readdirSync('test/fixtures').forEach(check => {
+    test(check, t => atomise(check).then(({atomicCSS, atomicMap}) => {
         t.is(atomicCSS, expectedCSS(check));
         t.deepEqual(atomicMap, expectedMap(check));
     }));
