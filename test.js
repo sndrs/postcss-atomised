@@ -17,6 +17,7 @@ const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
     'chained',
     'dedupe',
     'mq',
+    'supports',
     'pseudo',
     'complex' // mix of everything
 ].forEach(check => {

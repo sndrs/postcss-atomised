@@ -46,10 +46,12 @@ export default function atomiseCSS (css) {
                 atrules[atrule] = (atrules[atrule] || []).concat(getDeclarations(rule, atrule));
             }
             if (rule.type === 'atrule') {
-                atrule = `@${rule.name} ${rule.params}`;
-                rule.nodes.forEach(rule => {
-                    atrules[atrule] = (atrules[atrule] || []).concat(getDeclarations(rule, atrule));
-                });
+                if (_.includes(['media', 'supports'], rule.name)) {
+                    atrule = `@${rule.name} ${rule.params}`;
+                    rule.nodes.forEach(rule => {
+                        atrules[atrule] = (atrules[atrule] || []).concat(getDeclarations(rule, atrule));
+                    });
+                }
             }
             return atrules;
         }, {});
