@@ -23,16 +23,24 @@ So this:
 ```
 becomes this:
 ```CSS
-.a { background-color: red; }
-.b:hover { background-color: hotpink; }
-.c { color: limegreen; }
+.a { 
+    background-color: red; 
+}
+.b:hover { 
+    background-color: hotpink; 
+}
+.c { 
+    color: limegreen; 
+}
 @media (min-width: 100px) {
- .a-a:hover { background-color: brown; }
+    .a-a:hover { 
+    background-color: brown; 
+}
 }
 ```
 ```JSON
 {
-    "thing": ["a", "b"],
+    "thing": ["a", "c"],
     "other-thing": ["a", "b", "c", "a-a"]
 }
 ```
@@ -43,7 +51,7 @@ The idea is that in production, you would inline the atomic CSS and then transfo
 ```
 into
 ```HTML
-<div class="a b"></div>
+<div class="a c"></div>
 <div class="a b c a-a"></div>
 ```
 
