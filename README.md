@@ -6,21 +6,34 @@ So this:
 ```CSS
 .thing {
     background-color: red;
+    color: limegreen;
 }
 .other-thing {
     background-color: red;
     color: limegreen;
 }
+.other-thing:hover {
+    background-color: hotpink;
+}
+@media (min-width: 100px) {
+    .other-thing:hover {
+        background-color: brown;
+    }
+}
 ```
 becomes this:
 ```CSS
 .a { background-color: red; }
-.b { color: limegreen; }
+.b:hover { background-color: hotpink; }
+.c { color: limegreen; }
+@media (min-width: 100px) {
+ .a-a:hover { background-color: brown; }
+}
 ```
 ```JSON
 {
-    "thing": ["a"],
-    "other-thing": ["a", "b"]
+    "thing": ["a", "b"],
+    "other-thing": ["a", "b", "c", "a-a"]
 }
 ```
 The idea is that in production, you would inline the atomic CSS and then transform the following:
@@ -30,8 +43,8 @@ The idea is that in production, you would inline the atomic CSS and then transfo
 ```
 into
 ```HTML
-<div class="a"></div>
 <div class="a b"></div>
+<div class="a b c a-a"></div>
 ```
 
 This means you should get the benefits of atomic CSS file size, while being able to write CSS however you like (Sass, PostCSS etc) and without needing to learn your atomic library.
