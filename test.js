@@ -28,3 +28,4 @@ const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
 });
 
 test(t => t.throws(atomise('keyframes')));
+test(t => t.throws(atomise('font-face')));

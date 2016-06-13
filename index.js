@@ -55,6 +55,9 @@ export default function atomiseCSS (css) {
                 if (rule.name === 'keyframes') {
                     throw('@keyframes should be put in the global scope');
                 }
+                if (rule.name === 'font-face') {
+                    throw('@font-face should be put in the global scope');
+                }
             }
             return atrules;
         }, {});
