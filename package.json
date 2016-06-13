@@ -20,6 +20,7 @@
     "shorthash": "0.0.2"
   },
   "scripts": {
+    "start": "npm test -- --watch",
     "test": "ava"
   },
   "devDependencies": {
