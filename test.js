@@ -26,3 +26,5 @@ const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
         t.deepEqual(atomicMap, expectedMap(check));
     }));
 });
+
+test(t => t.throws(atomise('keyframes')));

@@ -52,6 +52,9 @@ export default function atomiseCSS (css) {
                         atrules[atrule] = (atrules[atrule] || []).concat(getDeclarations(rule, atrule));
                     });
                 }
+                if (rule.name === 'keyframes') {
+                    throw('@keyframes should be put in the global scope');
+                }
             }
             return atrules;
         }, {});
