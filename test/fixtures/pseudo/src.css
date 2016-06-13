@@ -1,0 +1,16 @@
+.pseudo {
+    content: 'pseudo';
+}
+
+.pseudo:hover {
+    content: 'pseudo:hover';
+}
+
+.no-pseudo {
+    content: 'no-pseudo';
+}
+
+.pseudo-2:hover,
+.no-pseudo-2 {
+    content: 'shared no-pseudo/pseudo:hover';
+}

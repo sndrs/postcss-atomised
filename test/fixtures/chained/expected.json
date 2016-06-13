@@ -1,4 +1,4 @@
 {
     "chained-1": ["a"],
-    "chained-2": ["b", "a"]
+    "chained-2": ["a", "b"]
 }

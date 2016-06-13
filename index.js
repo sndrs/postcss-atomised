@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import hash from 'shorthash';
 import postcss from "postcss";
-import nano from "cssnano";
-import autoprefixer from "autoprefixer";
 import mqpacker from "css-mqpacker";
 import perfectionist from "perfectionist";
 import chalk from "chalk";
@@ -16,11 +14,15 @@ const numberToLetter = i => (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') +
 
 const getDeclarations = (rule, atrule = false) => {
     const {selector, nodes} = rule;
-    const declarations = nodes.map(declaration => {
-        const {prop, value} = declaration;
-        return {prop, value, hash: hash.unique(`${prop}${value}${atrule}`)};
+    const selectors = selector.replace(/\./g, '').split(', ');
+    return selectors.map(selector => {
+        const [className, pseudo] = selector.split(':');
+        const declarations = nodes.map(declaration => {
+            const {prop, value} = declaration;
+            return {prop, value, hash: hash.unique(`${prop}${value}${atrule}${pseudo}`), pseudo};
+        });
+        return {selector: className, declarations};
     });
-    return {selector: selector.replace(/\./g, '').split(', '), declarations};
 }
 
 const CSSfromAST = declarationsForAtrule => _.map(declarationsForAtrule, declaration => {
@@ -35,6 +37,8 @@ const debug = _ => console.log(JSON.stringify(_, null, 4));
 export default function atomiseCSS (css) {
     return postcss([perfectionist({format: 'compact'})]).process(css)
     .then(AST => {
+        // console.log('************** AST ****************');
+        // debug(AST);
         return AST.root.nodes.reduce((atrules, rule) => {
             let atrule;
             if (rule.type === 'rule') {
@@ -51,17 +55,20 @@ export default function atomiseCSS (css) {
         }, {});
     })
     .then(rulesByAtrule => {
+        // console.log('************** rulesByAtrule ****************');
+        // debug(rulesByAtrule)
         Object.keys(rulesByAtrule).forEach(atrule => {
             rulesByAtrule[atrule] = rulesByAtrule[atrule].reduce((classMap, rule) => {
-                rule.selector.forEach(className => {
-                    classMap[className] = _.uniqBy(rule.declarations.concat(classMap[className] || []), 'prop');
-                })
+                classMap[rule.selector] = _.uniqWith(rule.declarations.concat(classMap[rule.selector] || []), (a, b) => {
+                    return a.prop === b.prop && a.pseudo === b.pseudo;
+                }).reverse(); // easier for testing
                 return classMap;
             }, {})
         })
         return rulesByAtrule;
     })
     .then(classMapByAtrule => {
+        // console.log('************** classMapByAtrule ****************');
         // debug(classMapByAtrule)
         let atRuleIndex = 0;
         const atomicDeclarationsByAtrule = _.reduce(classMapByAtrule, (declarations, declarationsForAtrule, atrule) => {
@@ -75,9 +82,10 @@ export default function atomiseCSS (css) {
                 .uniqBy('hash')
                 .orderBy(['prop'])
                 .reduce((declarations, declaration, j) => {
-                    const {prop, value, atrule} = declaration;
+                    const {prop, value, atrule, pseudo} = declaration;
+                    const pseudoSuffix = pseudo !== undefined ? `:${pseudo}` : '';
                     declarations[declaration.hash] = {
-                        className: `${atrulePrefix}${numberToLetter(j)}`,
+                        className: `${atrulePrefix}${numberToLetter(j)}${pseudoSuffix}`,
                         prop,
                         value,
                         atrule
@@ -97,33 +105,36 @@ export default function atomiseCSS (css) {
         // create the CSS from `atomicDeclarations`, e.g.
         // .a {width:100%}
         // .b {height:1rem}
-        let atomicCSS = _.map(atomicDeclarationsByAtrule, (declarationsForAtrule, atrule) => {
-            if (atrule === 'none') {
-                return CSSfromAST(declarationsForAtrule);
-            }
-            return `${atrule} {${CSSfromAST(declarationsForAtrule)}}`;
-        }).join('');
-
-
-        atomicCSS = postcss([autoprefixer(), mqpacker({sort: true}), perfectionist({format: 'compact'})])
-            .process(atomicCSS)
+        const atomicCSS = postcss([mqpacker({
+                sort: true
+            }), perfectionist({
+                format: 'compact'
+            })])
+            .process(_.map(atomicDeclarationsByAtrule, (declarationsForAtrule, atrule) => {
+                if (atrule === 'none') {
+                    return CSSfromAST(declarationsForAtrule);
+                }
+                return `${atrule} {${CSSfromAST(declarationsForAtrule)}}`;
+            }).join(''))
             .css;
-
-        // create a map of the original classes to the atomic classes
-        // {
-        //     "nav": ["a", "b"]
-        // }
 
         const atomicMap = _.reduce(classMapByAtrule, (atomicMap, classMap) => {
             _.forEach(classMap, (declaration, className) => {
                 atomicMap[className] = (atomicMap[className] || [])
                     .concat(declaration
                         .map(rule => rule.hash)
-                        .map(hash => atomicDeclarations[hash].className)
+                        .map(hash => atomicDeclarations[hash].className.split(':')[0])
+                        .sort() // easier for testing
                     );
             });
             return atomicMap;
         }, {});
+
+        // console.log('************** CSS ****************');
+        // console.log(atomicCSS);
+
+        // console.log('************** JSON ****************');
+        // debug(atomicMap);
 
         console.log(`${chalk.white(`${Object.keys(atomicMap).length} selectors`)} found in ${chalk.white(prettyBytes(gzipSize.sync(css)))} of CSS (gzipped).`);
         console.log(`${chalk.blue(`${Object.keys(atomicDeclarations).length} atomic classes`)} created in ${chalk.green(prettyBytes(gzipSize.sync(atomicCSS)))} (gzipped).`);

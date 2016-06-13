@@ -1,0 +1,19 @@
+.a {
+    content: 'pseudo';
+}
+
+.b:hover {
+    content: 'pseudo:hover';
+}
+
+.c {
+    content: 'no-pseudo';
+}
+
+.d:hover {
+    content: 'shared no-pseudo/pseudo:hover';
+}
+
+.e {
+    content: 'shared no-pseudo/pseudo:hover';
+}
