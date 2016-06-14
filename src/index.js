@@ -34,7 +34,7 @@ const CSSfromAST = declarationsForAtrule => _.map(declarationsForAtrule, declara
 
 const debug = _ => console.log(JSON.stringify(_, null, 4));
 
-export default function atomiseCSS (css) {
+export default function (css) {
     return postcss([perfectionist({format: 'compact'})]).process(css)
     .then(AST => {
         // console.log('************** AST ****************');

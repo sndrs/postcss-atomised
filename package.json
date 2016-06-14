@@ -21,17 +21,21 @@
   },
   "scripts": {
     "start": "npm test -- --watch",
-    "test": "ava"
+    "test": "ava",
+    "compile": "babel src/index.js -o index.js",
+    "compile-plugin": "chokidar './postcss-atomised/src/index.js' -c 'babel postcss-atomised/src/index.js -o postcss-atomised/index.js && node ./loadtest' --initial -p --silent"
   },
   "devDependencies": {
-    "ava": "^0.15.0"
+    "ava": "^0.15.0",
+    "chokidar-cli": "^1.2.0",
+    "console-highlight": "^0.1.0"
   },
   "ava": {
     "files": [
       "test.js"
     ],
     "source": [
-      "index.js",
+      "postcss-atomised/src/index.js",
       "test/**/*"
     ],
     "require": [
