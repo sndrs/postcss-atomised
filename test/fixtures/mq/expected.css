@@ -1,19 +1,19 @@
-.a { color: hotpink; }
-.b { color: red; }
-.c { color: blue; }
-.d { color: green; }
-.e { content: 'mq@root'; }
-.f { content: 'no-mq@root'; }
+.a { content: 'mq@root'; }
+.b { color: hotpink; }
+.c { color: red; }
+.d { content: 'no-mq@root'; }
+.e { color: blue; }
+.f { color: green; }
 @media (min-width: 10px) {
- .a-a { color: blue; }
- .a-b { color: hotpink; }
- .a-c { content: 'mq@10px'; }
+ .g { content: 'mq@10px'; }
+ .h { color: blue; }
+ .i { color: hotpink; }
 }
 @media (min-width: 100px) {
- .c-a { color: orange; }
- .c-b { content: 'mq@100px'; }
+ .l { content: 'mq@100px'; }
+ .m { color: orange; }
 }
 @media (min-width: 1000px) {
- .b-a { color: yellow; }
- .b-b { content: 'mq@1000px'; }
+ .j { content: 'mq@1000px'; }
+ .k { color: yellow; }
 }

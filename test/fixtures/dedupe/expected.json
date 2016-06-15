@@ -1,3 +1,6 @@
 {
-    "dedupe": ["a"]
+    "dedupe": ["a"],
+    "dedupe-2": ["a"],
+    "dedupe-3": ["a"],
+    "dedupe-4": ["b"]
 }

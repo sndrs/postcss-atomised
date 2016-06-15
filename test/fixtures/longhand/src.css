@@ -1,0 +1,30 @@
+.margin {
+    margin: 10px;
+}
+
+.margin-2 {
+    margin: 10px 5% -1em;
+    margin-top: 100%;
+}
+
+.margin-2 {
+    margin-left: 10%;
+}
+
+.padding {
+    padding: 10px;
+}
+
+.padding-2 {
+    padding: 10px 5% -1em;
+    padding-top: 100%;
+}
+
+.padding-2 {
+    padding-left: 10%;
+}
+
+.font {
+    font: 1rem "Roboto Condensed", sans-serif;
+    font-size: 2rem;
+}

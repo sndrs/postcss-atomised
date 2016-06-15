@@ -2,3 +2,16 @@
     color: red;
     color: red;
 }
+
+.dedupe-2 {
+    color: blue;
+    color: red;
+}
+
+.dedupe-3 {
+    color: red;
+}
+
+.dedupe-4 {
+    color: blue;
+}

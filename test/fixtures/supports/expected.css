@@ -1,5 +1,3 @@
 @supports (display: flex) {
-    .a-a {
-        display: flex;
-    }
+ .a { display: flex; }
 }

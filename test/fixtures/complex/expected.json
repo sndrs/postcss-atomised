@@ -1,8 +1,8 @@
 {
-    "mqpseudo": [
-        "a",
-        "a-a",
-        "a-b",
-        "b-a"
-    ]
+  "mqpseudo": [
+    "a",
+    "b",
+    "c",
+    "d"
+  ]
 }
