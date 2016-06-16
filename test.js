@@ -28,14 +28,11 @@ const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
     'mq',
     'supports',
     'pseudo',
-    'complex' // mix of everything
+    'complex'
 ].forEach(check => {
     test(check, t => srcCSS(check).then((result) => {
         const json = require(`./test/output/${check}.json`);
         t.is(result.css, expectedCSS(check).css);
         t.deepEqual(json, expectedMap(check));
-        // console.log(result.css);
-        // console.log(json);
     }));
 });
-test(t => t.pass());

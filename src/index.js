@@ -1,6 +1,6 @@
 import path from 'path';
 import { writeFile } from 'fs';
-import mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp-promise';
 
 import postcss from 'postcss';
 
@@ -11,7 +11,7 @@ import parseFont from 'parse-css-font';
 import mqpacker from "css-mqpacker";
 
 import hash from 'shorthash';
-import _ from 'lodash';
+import uniqBy from 'lodash.uniqby';
 
 // I have no idea how this actually works, but it does
 // I got it off SO #toptier
@@ -46,7 +46,7 @@ const dedupeDecls = postcss.plugin('postcss-dedupe-declarations', (opts = {}) =>
             resolvedDecls.push(postcss.decl({prop, value: resolveProp(rule, prop)}));
         });
         rule.removeAll();
-        rule.append(_.uniqBy(resolvedDecls, 'prop'));
+        rule.append(uniqBy(resolvedDecls, 'prop'));
     });
 });
 
@@ -132,12 +132,10 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
     result.root.append(newRoot);
 
     return new Promise((resolve, reject) => {
-        mkdirp(path.dirname(json), err => {
-            if (err) {
-                throw "couldn't create directory for JSON."
-            }
+        mkdirp(path.dirname(json)).then(() => {
             writeFile(json, JSON.stringify(atomicMap, null, 2), resolve);
         })
+        .catch(reject);
     })
 });
 
