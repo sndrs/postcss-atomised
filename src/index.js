@@ -16,7 +16,7 @@ import uniqBy from 'lodash.uniqby';
 // I have no idea how this actually works, but it does
 // I got it off SO #toptier
 // http://stackoverflow.com/a/32007970
-const numberToLetter = i => (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') + 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ'[i % 26 >> 0];
+const numberToLetter = i => (i >= 52 ? numberToLetter((i / 52 >> 0) - 1) : '') + 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[i % 52 >> 0];
 
 // get single instances of each selector if its a list (.a, .b etc)
 const unchainSelectors = postcss.plugin('postcss-unchain-selectors', (opts = {}) => css => {
