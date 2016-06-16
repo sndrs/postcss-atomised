@@ -9,6 +9,8 @@ import resolveProp from 'postcss-resolve-prop';
 import parseSides from 'parse-css-sides';
 import parseFont from 'parse-css-font';
 import mqpacker from "css-mqpacker";
+import stylelint from 'stylelint';
+import reporter from 'postcss-reporter';
 
 import hash from 'shorthash';
 import uniqBy from 'lodash.uniqby';
@@ -147,6 +149,23 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
 });
 
 module.exports = postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => (css, result) => postcss([
+    // we check these because it won't work if these are used
+    stylelint({
+        config: {
+            rules: {
+                "selector-no-combinator": true,
+                "selector-no-attribute": true,
+                "selector-no-id": true,
+                "selector-no-qualifying-type": true,
+                "selector-no-type": true,
+                "selector-no-universal": true,
+                "declaration-no-important": true
+            }
+        }
+    }),
+    reporter({
+        clearMessages: true
+    }),
     unchainSelectors(),
     mergeRules(),
     longhand(),
