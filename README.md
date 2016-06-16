@@ -40,8 +40,8 @@ becomes this:
 ```
 ```JSON
 {
-	one: [ 'a', 'b', 'c', 'd', 'e', 'f' ],
-  	two: [ 'a', 'c', 'g', 'h' ] 
+    "one": [ "a", "b", "c", "d", "e", "f" ],
+    "two": [ "a", "c", "g", "h" ] 
 }
 ```
 The idea is that in production, you would inline the atomic CSS and then transform the following:
