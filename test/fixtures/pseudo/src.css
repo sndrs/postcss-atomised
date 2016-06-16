@@ -6,6 +6,10 @@
     content: 'pseudo:hover';
 }
 
+.pseudo-3:hover {
+    content: 'pseudo:hover';
+}
+
 .no-pseudo {
     content: 'no-pseudo';
 }

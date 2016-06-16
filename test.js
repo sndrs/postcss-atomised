@@ -1,25 +1,25 @@
 import test from 'ava';
 
 import {readFileSync} from 'fs';
+import path from 'path';
 import postcss from "postcss";
-import atomised from './postcss-atomised/src';
+import atomised from './src';
 import perfectionist from "perfectionist";
 
 const fixturePath = check => `./test/fixtures/${check}`;
 
 const srcCSS = check => postcss([
-        atomised(),
-        perfectionist({format: 'compact'})
-    ])
-    .process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'));
+    atomised({
+        json: path.resolve('./test/output/', `${check}.json`)
+    }),
+    perfectionist({format: 'compact'})
+]).process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'));
 
-// const expectedCSS = check => postcss([stylefmt])
-//     .process(readFileSync(`${fixturePath(check)}/expected.css`, 'utf8'));
+const expectedCSS = check => postcss([
+    perfectionist({format: 'compact'})
+]).process(readFileSync(`${fixturePath(check)}/expected.css`, 'utf8'));
 
-// const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
-
-
-
+const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
 
 [
     "longhand",
@@ -30,18 +30,12 @@ const srcCSS = check => postcss([
     'pseudo',
     'complex' // mix of everything
 ].forEach(check => {
-        srcCSS(check).then(result => {
-            console.log(result.css);
-        })
-        // test(check, t => srcCSS(check).then((result) => {
-        //     // console.log(result.css);
-        //     // t.is(result.css, expectedCSS(check).css);
-
-        //     // console.log(JSON.stringify(result.atomicMap, null, 2));
-        //     // t.deepEqual(result.atomicMap, expectedMap(check));
-        // }));
+    test(check, t => srcCSS(check).then((result) => {
+        const json = require(`./test/output/${check}.json`);
+        t.is(result.css, expectedCSS(check).css);
+        t.deepEqual(json, expectedMap(check));
+        // console.log(result.css);
+        // console.log(json);
+    }));
 });
-
-// test(t => t.throws(atomise('keyframes')));
-// test(t => t.throws(atomise('font-face')));
 test(t => t.pass());

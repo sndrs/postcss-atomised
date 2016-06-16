@@ -12,6 +12,7 @@
     "glob-promise": "^1.0.6",
     "gzip-size": "^3.0.0",
     "lodash": "^4.12.0",
+    "mkdirp": "^0.5.1",
     "mkdirp-promise": "^2.0.0",
     "node-sass": "^3.7.0",
     "parse-css-font": "^2.0.2",
@@ -26,7 +27,8 @@
     "postcss-pxtorem": "^3.3.1",
     "pretty-bytes": "^3.0.1",
     "shorthash": "0.0.2",
-    "stylefmt": "^3.4.4"
+    "stylefmt": "^3.4.4",
+    "writefile": "^0.2.8"
   },
   "scripts": {
     "start": "npm test -- --watch",
@@ -47,7 +49,7 @@
     ],
     "source": [
       "postcss-atomised/src/index.js",
-      "test/**/*"
+      "test/fixtures/**/*"
     ],
     "require": [
       "babel-register"
