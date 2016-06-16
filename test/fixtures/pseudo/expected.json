@@ -1,10 +1,18 @@
 {
-    "pseudo": [
-        "a", "b"
-    ],
-    "no-pseudo": [
-        "c"
-    ],
-    "pseudo-2": ["d"],
-    "no-pseudo-2": ["e"]
+  "pseudo": [
+    "a",
+    "b"
+  ],
+  "pseudo-3": [
+    "b"
+  ],
+  "no-pseudo": [
+    "c"
+  ],
+  "pseudo-2": [
+    "d"
+  ],
+  "no-pseudo-2": [
+    "e"
+  ]
 }

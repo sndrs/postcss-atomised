@@ -1,5 +1,9 @@
-@supports (display: flex) {
-    .a-a {
-        display: flex;
+.a {
+    display: flex;
+}
+
+@supports not (display: flex) {
+    .b {
+        display: block;
     }
 }

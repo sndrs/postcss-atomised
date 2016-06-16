@@ -65,4 +65,5 @@ Currently, there is only a test suite, which you can run with the standard `npm 
 It uses PostCSS, so [their caveat](https://github.com/postcss/postcss#nodejs-010-and-the-promise-api) about v0.10 applies.
 
 ## To do
-- [ ] scoping classes?
+- [ ] `@keyframes`
+- [ ] `@font-face`

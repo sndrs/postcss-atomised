@@ -1,0 +1,23 @@
+.a { margin-top: 10px; }
+.b { margin-right: 10px; }
+.c { margin-bottom: 10px; }
+.d { margin-left: 10px; }
+.e { margin-top: 100%; }
+.f { margin-right: 5%; }
+.g { margin-bottom: -1em; }
+.h { margin-left: 10%; }
+.i { padding-top: 10px; }
+.j { padding-right: 10px; }
+.k { padding-bottom: 10px; }
+.l { padding-left: 10px; }
+.m { padding-top: 100%; }
+.n { padding-right: 5%; }
+.o { padding-bottom: -1em; }
+.p { padding-left: 5%; }
+.q { font-style: normal; }
+.r { font-variant: normal; }
+.s { font-weight: normal; }
+.t { font-stretch: normal; }
+.u { font-size: 2rem; }
+.v { line-height: normal; }
+.w { font-family: Roboto Condensed, sans-serif; }
