@@ -38,9 +38,7 @@
   "scripts": {
     "start": "npm test -- --watch",
     "test": "ava",
-    "transpile": "babel src -d build",
-    "prepublish": "npm run transpile",
-    "postpublish": "rm -rf build && git push --follow-tags"
+    "build": "babel src -d build"
   },
   "devDependencies": {
     "ava": "^0.15.0",
