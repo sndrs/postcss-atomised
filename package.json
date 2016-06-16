@@ -23,7 +23,7 @@
   "dependencies": {
     "css-mqpacker": "^4.0.1",
     "lodash.uniqby": "^4.5.0",
-    "mkdirp-promise": "^2.0.0",
+    "mkdirp": "^0.5.1",
     "parse-css-font": "^2.0.2",
     "parse-css-sides": "^2.0.0",
     "perfectionist": "^2.1.3",

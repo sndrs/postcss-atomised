@@ -1,6 +1,6 @@
 import path from 'path';
 import { writeFile } from 'fs';
-import mkdirp from 'mkdirp-promise';
+import mkdirp from 'mkdirp';
 
 import postcss from 'postcss';
 
@@ -132,10 +132,10 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
     result.root.append(newRoot);
 
     return new Promise((resolve, reject) => {
-        mkdirp(path.dirname(json)).then(() => {
+        mkdirp(path.dirname(json), err => {
+            if (err) reject(err);
             writeFile(json, JSON.stringify(atomicMap, null, 2), resolve);
-        })
-        .catch(reject);
+        });
     })
 });
 
