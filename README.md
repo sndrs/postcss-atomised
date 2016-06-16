@@ -1,4 +1,4 @@
-# Atomised CSS [![Build Status](https://travis-ci.org/sndrs/atomised-css.svg?branch=master)](https://travis-ci.org/sndrs/atomised-css)
+# Atomised CSS [![Build Status](https://travis-ci.org/sndrs/postcss-atomised.svg?branch=master)](https://travis-ci.org/sndrs/postcss-atomised)
 
 PostCSS plugin that creates an atomised stylesheet from a standard one, and provides a json map from the original classes to the atomic ones.
 
