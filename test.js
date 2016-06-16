@@ -9,12 +9,12 @@ import perfectionist from "perfectionist";
 
 const fixturePath = check => `./test/fixtures/${check}`;
 
+
+
 const srcCSS = check => postcss([
-    atomised({
-        json: path.resolve('./test/output/', `${check}.json`)
-    }),
+    atomised({json: path.resolve('./test/output/', `${check}.json`)}),
     perfectionist({format: 'compact'})
-]).process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'));
+]).process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'), {from: `${fixturePath(check)}/src.css`});
 
 const expectedCSS = check => postcss([
     perfectionist({format: 'compact'})
