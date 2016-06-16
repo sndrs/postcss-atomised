@@ -64,9 +64,11 @@ into:
 
 This means you should get the benefits of atomic CSS file size, while being able to write CSS however you like (Sass, PostCSS etc) and without needing to learn an atomic library.
 
-## Usage
+Only class selectors can be used, and all elements must have only one class for it to work. Every element can therefore be isolated from the rest (if they don't share its classname).
 
-Note that elements must have only one class for it to work, and only class selectors can be used.
+Because it reduces a stylesheet to only its resolved declarations, any duplication across rules will be eradicated.
+
+## Usage
 
 ```javascript
 import postcss from 'postcss';
