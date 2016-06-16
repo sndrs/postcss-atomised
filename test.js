@@ -1,6 +1,7 @@
 import test from 'ava';
 
-import {readFileSync} from 'fs';
+import {readFileSync, readdirSync} from 'fs';
+import junk from 'junk';
 import path from 'path';
 import postcss from "postcss";
 import atomised from './src';
@@ -21,15 +22,7 @@ const expectedCSS = check => postcss([
 
 const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
 
-[
-    "longhand",
-    'chained',
-    'dedupe',
-    'mq',
-    'supports',
-    'pseudo',
-    'complex'
-].forEach(check => {
+readdirSync('test/fixtures').filter(junk.not).forEach(check => {
     test(check, t => srcCSS(check).then((result) => {
         const json = require(`./test/output/${check}.json`);
         t.is(result.css, expectedCSS(check).css);

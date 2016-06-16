@@ -22,6 +22,7 @@
   ],
   "dependencies": {
     "css-mqpacker": "^4.0.1",
+    "junk": "^1.0.2",
     "lodash.uniqby": "^4.5.0",
     "mkdirp": "^0.5.1",
     "parse-css-font": "^2.0.2",
