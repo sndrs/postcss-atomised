@@ -62,10 +62,6 @@ This means you should get the benefits of atomic CSS file size, while being able
 
 Note that elements must have only one class for it to work, and only class selectors can be used.
 
-## To do
-- [ ] `@keyframes`
-- [ ] `@font-face`
-
 ## Development
 Run `npm start` to run the Ava test runner in watch mode.
 

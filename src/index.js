@@ -89,6 +89,13 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
     const newRoot = [];
     const atomicMap = {};
 
+    css.walkAtRules(atRule => {
+        if (['keyframes', 'font-face'].some(name => name === atRule.name)) {
+            newRoot.push(atRule.clone());
+            atRule.remove();
+        };
+    })
+
     css.walkDecls(decl => {
         let cssStr = '';
         const declAtrules = [];
