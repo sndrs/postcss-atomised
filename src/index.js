@@ -163,9 +163,7 @@ module.exports = postcss.plugin('postcss-atomised', ({json = path.resolve(proces
             }
         }
     }),
-    reporter({
-        clearMessages: true
-    }),
+    reporter({clearMessages: true}),
     unchainSelectors(),
     mergeRules(),
     longhand(),
