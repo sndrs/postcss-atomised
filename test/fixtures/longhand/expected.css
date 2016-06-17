@@ -14,5 +14,10 @@
 .n { padding-right: 5%; }
 .o { padding-bottom: -1em; }
 .p { padding-left: 5%; }
-.q { font-family: "Roboto Condensed", sans-serif; }
-.r { font-size: 2rem; }
+.q { font-style: normal; }
+.r { font-variant: normal; }
+.s { font-weight: normal; }
+.t { font-stretch: normal; }
+.u { font-size: 2rem; }
+.v { line-height: normal; }
+.w { font-family: Roboto Condensed, sans-serif; }

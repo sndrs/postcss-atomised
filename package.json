@@ -22,7 +22,6 @@
   ],
   "dependencies": {
     "css-mqpacker": "^4.0.1",
-    "css-shorthand-expand": "^1.1.0",
     "junk": "^1.0.2",
     "lodash.uniqby": "^4.5.0",
     "mkdirp": "^0.5.1",
