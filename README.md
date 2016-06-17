@@ -7,19 +7,15 @@ It will turn this:
 ```CSS
 .one {
     background-color: red;
-    color: limegreen;
     margin: 1rem;
 }
 .two {
     background-color: red;
     margin-top: 1rem;
 }
-.two:hover {
-    background-color: hotpink;
-}
 @media (min-width: 100px) {
     .two:hover {
-        background-color: brown;
+        background-color: hotpink;
     }
 }
 ```
@@ -28,14 +24,12 @@ into this:
 
 ```CSS
 .a { background-color: red; }
-.b { color: limegreen; }
-.c { margin-top: 1rem; }
-.d { margin-right: 1rem; }
-.e { margin-bottom: 1rem; }
-.f { margin-left: 1rem; }
-.g:hover { background-color: hotpink; }
+.b { margin-top: 1rem; }
+.c { margin-right: 1rem; }
+.d { margin-bottom: 1rem; }
+.e { margin-left: 1rem; }
 @media (min-width: 100px) {
-    .h:hover { background-color: brown; }
+ .f:hover { background-color: hotpink; }
 }
 ```
 
@@ -43,12 +37,12 @@ and this:
 
 ```JSON
 {
-    "one": [ "a", "b", "c", "d", "e", "f" ],
-    "two": [ "a", "c", "g", "h" ]
+  "one": ["a", "b", "c"," d", "e"],
+  "two": ["a", "b", "f"]
 }
 ```
 
-The idea is that in production, you would inline the atomic CSS and then transform the following:
+The idea is that in development, you leave your big stylesheet alone, with sourcemaps etc all intact. In production though, you would inline the atomic CSS and then using the json map, transform the following:
 
 ```HTML
 <div class="one"></div>
@@ -62,19 +56,26 @@ into:
 <div class="a c g h"></div>
 ```
 
-This means you should get the benefits of atomic CSS file size, while being able to write CSS however you like (Sass, PostCSS etc) and without needing to learn an atomic library.
+This means you should be able to write your CSS in a super-modular way, without worrying about the bloat.
 
-Only class selectors can be used, and all elements must have only one class for it to work. Every element can therefore be isolated from the rest (if they don't share its classname).
+### Restrictions
+- only class selectors can be used (it will warn you if use other selectors)
+- all elements must have only one class
 
-Because it reduces a stylesheet to only its resolved declarations, any duplication across rules will be eradicated.
+Because of the single-class requirement, every element can be completely isolated from the rest. And because it reduces a stylesheet to only its resolved declarations, any duplication across rules will be eradicated.
 
 ## Usage
 
 ```javascript
 import postcss from 'postcss';
 import atomised from 'postcss-atomised';
-postcss([atomised({json: path_to_where_the_json_should_go)})]).process(css).then(result => {
-    // do something with `result.css`
+
+const options = {
+    json: path_to_where_the_json_should_go
+};
+
+postcss([atomised(options)]).process(css).then(result => {
+    // do something with `result`
 });
 ```
 
