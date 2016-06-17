@@ -14,10 +14,12 @@
 .n { padding-right: 5%; }
 .o { padding-bottom: -1em; }
 .p { padding-left: 5%; }
-.q { font-style: normal; }
-.r { font-variant: normal; }
-.s { font-weight: normal; }
-.t { font-stretch: normal; }
-.u { font-size: 2rem; }
-.v { line-height: normal; }
-.w { font-family: Roboto Condensed, sans-serif; }
+.q { font-family: "Roboto Condensed", sans-serif; }
+.r { font-size: 2rem; }
+.s { border-width: 1px; }
+.t { border-style: solid; }
+.u { border-color: black; }
+.v { border-color: red; }
+.w { border-top-width: 1px; }
+.x { border-top-style: solid; }
+.y { border-top-color: red; }
