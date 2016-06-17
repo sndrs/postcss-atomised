@@ -1,26 +1,30 @@
 import postcss from 'postcss';
-import parseSides from 'parse-css-sides';
 import parseFont from 'parse-css-font';
+import shorthandExpand from 'css-shorthand-expand';
+import parseValue from 'postcss-value-parser';
 
 // expand shorthand rules
 export default postcss.plugin('expand-shorthand', (opts = {}) => css => {
+    const autoProps = [
+        "background",
+        "font",
+        "padding",
+        "margin",
+        "outline"
+    ];
+    const borderProps = ['border-width', 'border-style', 'border-color'];
     css.walkDecls(decl => {
-        ['margin', 'padding'].forEach(prop => {
-            if (decl.prop === prop) {
-                const sides = parseSides(decl.value);
-                decl.replaceWith(Object.keys(sides).map(key => {
-                    return postcss.decl({prop: `${prop}-${key}`, value: sides[key]});
-                }));
-            }
-        })
-        if (decl.prop === 'font') {
-            const fontProps = parseFont(decl.value);
-            decl.replaceWith(Object.keys(fontProps).map(key => {
-                if (key === 'lineHeight') {
-                    return postcss.decl({prop: 'line-height', value: fontProps[key]});
-                }
-                return postcss.decl({prop: `font-${key}`, value: fontProps[key].toString()});
-            }))
-        }
+        if (autoProps.indexOf(decl.prop) !== -1) {
+            const decls = shorthandExpand(decl.prop, decl.value);
+            decl.replaceWith(Object.keys(decls).map(prop => {
+                return postcss.decl({prop, value: decls[prop]});
+            }));
+        };
+        if (decl.prop === 'border') {
+            const values = parseValue(decl.value).nodes;
+            decl.replaceWith(values.filter(value => value.type === 'word').map((value, i) => {
+                return postcss.decl({prop: borderProps[i], value: value.value});
+            }));
+        };
     });
 });

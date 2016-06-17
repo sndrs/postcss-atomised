@@ -27,5 +27,7 @@ readdirSync('fixtures').filter(junk.not).forEach(check => {
         const json = require(`./output/${check}.json`);
         t.is(result.css, expectedCSS(check).css);
         t.deepEqual(json, expectedMap(check));
+        // console.log(result.css);
+        // console.log(JSON.stringify(json, null, 2));
     }));
 });
