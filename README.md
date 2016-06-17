@@ -58,11 +58,29 @@ into:
 
 This means you should be able to write your CSS in a super-modular way, without worrying about the bloat.
 
-### Restrictions
-- only class selectors can be used (it will warn you if use other selectors)
-- all elements must have only one class
+### Selector requirements
+- only single class selectors can be used (it will warn you if use other selectors)
+- pseudo selectors are fine
+- multiple/duplicate selectors are fine
 
-Because of the single-class requirement, every element can be completely isolated from the rest. And because it reduces a stylesheet to only its resolved declarations, any duplication across rules will be eradicated.
+| Selector  | Ok |
+|---|---|
+| `.a:b { }`  | :white_check_mark: |
+| `.a, .b { }`  | :white_check_mark:  |
+| `.a { }; .a { }`  | :white_check_mark:  |
+| `.a .b { }`  | :x: |
+| `.a.b { }`  | :x:  |
+| `a { }`  | :x:  |
+| `a b { }`  | :x:  |
+|  `#a { }` | :x:  |
+| `a[b] { }`  | :x:  |
+| `a > b { }`  | :x:  |
+| `a + b { }`  | :x:  |
+| `a ~ b { }`  | :x:  |
+| `*`  | :x:  |
+
+
+All elements can only use one class from the stylesheet that will be atomised. This means that every element is completely isolated from the rest. And because it reduces a stylesheet to only its resolved declarations, any duplication across rules will be eradicated.
 
 ## Usage
 
