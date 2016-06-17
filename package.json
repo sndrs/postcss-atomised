@@ -1,6 +1,6 @@
 {
   "name": "postcss-atomised",
-  "version": "0.1.1-0",
+  "version": "0.1.0-beta",
   "description": "PostCSS plugin that creates an atomised stylesheet from the input CSS, and provides a json map from the original classes to the atomic ones.",
   "main": "build/index.js",
   "repository": {
@@ -37,16 +37,18 @@
     "stylelint": "^6.6.0",
     "writefile": "^0.2.8"
   },
-  "scripts": {
-    "start": "npm test -- --watch",
-    "test": "ava",
-    "build": "babel src -d build"
-  },
   "devDependencies": {
     "ava": "^0.15.0",
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-register": "^6.9.0"
+  },
+  "scripts": {
+    "start": "npm test -- --watch",
+    "test": "ava",
+    "build": "babel src -d build",
+    "prepublish": "npm run build",
+    "postpublish": "rm -rf build && git push --follow-tags"
   },
   "ava": {
     "files": [
