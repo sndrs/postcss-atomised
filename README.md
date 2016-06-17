@@ -60,7 +60,7 @@ This means you should be able to write your CSS in a super-modular way, without 
 
 ### Selector requirements
 - only single class selectors can be atomised (other selectors will pass straight through)
-- pseudo selectors are fine
+- pseudo selectors/elements are fine
 - multiple/duplicate selectors are fine
 
 | Selector  | Ok |
