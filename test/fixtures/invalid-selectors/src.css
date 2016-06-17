@@ -1,0 +1,11 @@
+.class .descendant { content: '.class .descendant' }
+.class.shared { content: '.class.shared' }
+.class > .child { content: '.class > .child' }
+.class + .adjacent { content: '.class + .adjacent' }
+.class ~ .siblings { content: '.class ~ .siblings' }
+.class { content: '.class' }
+[attribute] { content: '[attribute]' }
+.class[attribute] { content: '.class[attribute]' }
+#id { content: '#id' }
+element {content: 'element'}
+* { content: 'universal' }

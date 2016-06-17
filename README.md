@@ -59,7 +59,7 @@ into:
 This means you should be able to write your CSS in a super-modular way, without worrying about the bloat.
 
 ### Selector requirements
-- only single class selectors can be used (it will warn you if use other selectors)
+- only single class selectors can be atomised (other selectors will pass straight through)
 - pseudo selectors are fine
 - multiple/duplicate selectors are fine
 
@@ -80,7 +80,7 @@ This means you should be able to write your CSS in a super-modular way, without 
 | `*`  | :x:  |
 
 
-All elements can only use one class from the stylesheet that will be atomised. This means that every element is completely isolated from the rest. And because it reduces a stylesheet to only its resolved declarations, any duplication across rules will be eradicated.
+All elements that you want to benefit from atomisation can only use one class from the original stylesheet. This means that those elements are completely isolated. And because it reduces a compatible stylesheet to only its resolved declarations, any duplication across atmomised rules will be eradicated.
 
 ## Usage
 

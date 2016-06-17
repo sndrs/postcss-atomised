@@ -3,6 +3,7 @@ import { writeFile } from 'fs';
 import mkdirp from 'mkdirp';
 
 import postcss from 'postcss';
+import parseSelector from 'postcss-selector-parser';
 
 import mergeRules from './lib/merge-rules';
 import unchainSelectors from './lib/unchain-selectors';
@@ -37,6 +38,17 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
             newRoot.push(atRule.clone());
             atRule.remove();
         };
+    })
+
+    css.walkRules(rule => {
+        parseSelector(selectors => {
+            selectors.each(selector => {
+                if (selector.nodes.length > 1 || selector.nodes[0].type !== "class") {
+                    newRoot.push(rule.clone());
+                    rule.remove();
+                }
+            })
+        }).process(rule.selector);
     })
 
     css.walkDecls(decl => {
@@ -90,21 +102,6 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
 });
 
 module.exports = postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => (css, result) => postcss([
-    // we check these because it won't work if these are used
-    stylelint({
-        config: {
-            rules: {
-                "selector-no-combinator": true,
-                "selector-no-attribute": true,
-                "selector-no-id": true,
-                "selector-no-qualifying-type": true,
-                "selector-no-type": true,
-                "selector-no-universal": true,
-                "declaration-no-important": true
-            }
-        }
-    }),
-    reporter({clearMessages: true, throwError: true}),
     unchainSelectors(),
     mergeRules(),
     expandShorthand(),
