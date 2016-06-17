@@ -1,0 +1,11 @@
+.a {
+    content: 'pseudo-el';
+}
+
+.b:after {
+    content: 'pseudo-el:after';
+}
+
+.c {
+    content: 'no-pseudo-el';
+}
