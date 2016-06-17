@@ -5,25 +5,21 @@ import parseValue from 'postcss-value-parser';
 
 // expand shorthand rules
 export default postcss.plugin('expand-shorthand', (opts = {}) => css => {
-    const autoProps = [
-        "background",
-        "font",
-        "padding",
-        "margin",
-        "outline"
-    ];
-    const borderProps = ['border-width', 'border-style', 'border-color'];
+    const generalProps = ["background", "font", "padding", "margin", "outline"];
+
+    const borderProps = ["border", "border-top", "border-right", "border-bottom", "border-left"];
+    const borderVariants = ['width', 'style', 'color'];
     css.walkDecls(decl => {
-        if (autoProps.indexOf(decl.prop) !== -1) {
+        if (generalProps.indexOf(decl.prop) !== -1) {
             const decls = shorthandExpand(decl.prop, decl.value);
             decl.replaceWith(Object.keys(decls).map(prop => {
                 return postcss.decl({prop, value: decls[prop]});
             }));
         };
-        if (decl.prop === 'border') {
+        if (borderProps.indexOf(decl.prop) !== -1) {
             const values = parseValue(decl.value).nodes;
             decl.replaceWith(values.filter(value => value.type === 'word').map((value, i) => {
-                return postcss.decl({prop: borderProps[i], value: value.value});
+                return postcss.decl({prop: `${decl.prop}-${borderVariants[i]}`, value: value.value});
             }));
         };
     });

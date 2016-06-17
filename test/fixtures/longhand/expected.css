@@ -20,3 +20,6 @@
 .t { border-style: solid; }
 .u { border-color: black; }
 .v { border-color: red; }
+.w { border-top-width: 1px; }
+.x { border-top-style: solid; }
+.y { border-top-color: red; }

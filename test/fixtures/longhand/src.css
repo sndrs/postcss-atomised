@@ -32,3 +32,7 @@
 .border-red {
     border: 1px solid red;
 }
+
+.border-top {
+    border-top: 1px solid red;
+}
