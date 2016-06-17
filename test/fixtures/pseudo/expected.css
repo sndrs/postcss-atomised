@@ -17,3 +17,7 @@
 .e {
     content: 'shared no-pseudo/pseudo:hover';
 }
+
+.f:after {
+    content: 'pseudo:after';
+}
