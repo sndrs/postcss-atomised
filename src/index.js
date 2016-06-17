@@ -43,7 +43,8 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
     css.walkRules(rule => {
         parseSelector(selectors => {
             selectors.each(selector => {
-                if (selector.nodes.length > 1 || selector.nodes[0].type !== "class") {
+                const [first, ...rest] = selector.nodes;
+                if (first.type !== "class" || rest.some(selector => selector.type !== 'pseudo')) {
                     newRoot.push(rule.clone());
                     rule.remove();
                 }
