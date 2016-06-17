@@ -4,3 +4,9 @@
 .chained-2 {
     height: 0;
 }
+.chained-1:after, .chained-2:after {
+    color: red;
+}
+.chained-2:after {
+    height: 0;
+}
