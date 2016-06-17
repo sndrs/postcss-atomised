@@ -50,7 +50,7 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
                 cssStr += decl.toString();
             }
             if (node.type === 'rule') {
-                const [className, ...pseudos] = node.selector.split(':');
+                const [className, ...pseudos] = node.selector.split(/::|:/);
                 cssStr += pseudos.join('');
                 declPseudos = pseudos;
                 parentClassname = className.replace(/^\./g, '');

@@ -1,7 +1,8 @@
 {
   "pseudo": [
     "a",
-    "b"
+    "b",
+    "f"
   ],
   "pseudo-3": [
     "b"
@@ -14,5 +15,14 @@
   ],
   "no-pseudo-2": [
     "e"
+  ],
+  "pseudo--double-colon": [
+    "g"
+  ],
+  "pseudo--chained": [
+    "h"
+  ],
+  "pseudo--chained--colon-crazy": [
+    "i"
   ]
 }
