@@ -18,3 +18,12 @@
 .no-pseudo-2 {
     content: 'shared no-pseudo/pseudo:hover';
 }
+
+.pseudo:after {
+    content: 'pseudo:after';
+}
+
+.pseudo::after {
+    content: 'pseudo:after';
+}
+

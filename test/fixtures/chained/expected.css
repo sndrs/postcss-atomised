@@ -4,3 +4,9 @@
 .b {
     height: 0;
 }
+.c:after {
+    color: red;
+}
+.d:after {
+    height: 0;
+}
