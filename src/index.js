@@ -4,76 +4,17 @@ import mkdirp from 'mkdirp';
 
 import postcss from 'postcss';
 
-import selectorParser from 'postcss-selector-parser';
-import resolveProp from 'postcss-resolve-prop';
-import parseSides from 'parse-css-sides';
-import parseFont from 'parse-css-font';
+import mergeRules from './lib/merge-rules';
+import unchainSelectors from './lib/unchain-selectors';
+import dedupeDeclarations from './lib/dedupe-declarations';
+import expandShorthand from './lib/expand-shorthand';
+import numberToLetter from './lib/number-to-letter';
+
 import mqpacker from "css-mqpacker";
 import stylelint from 'stylelint';
 import reporter from 'postcss-reporter';
 
 import hash from 'shorthash';
-import uniqBy from 'lodash.uniqby';
-
-// I have no idea how this actually works, but it does
-// I got it off SO #toptier
-// http://stackoverflow.com/a/32007970
-const numberToLetter = i => (i >= 52 ? numberToLetter((i / 52 >> 0) - 1) : '') + 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[i % 52 >> 0];
-
-// get single instances of each selector if its a list (.a, .b etc)
-const unchainSelectors = postcss.plugin('postcss-unchain-selectors', (opts = {}) => css => {
-    css.walkRules(rule => {
-        rule.replaceWith(rule.selectors.map(selector => rule.clone({selector})));
-    });
-});
-
-// merge rules with the same selector in the same container (root, at-rule etc)
-const mergeRules = postcss.plugin('postcss-merge-rules', (opts = {}) => css => {
-    css.walkRules(rule => {
-        rule.parent.each(otherRule => {
-            if (rule.selector === otherRule.selector && rule !== otherRule) {
-                otherRule.walkDecls(decl => decl.moveTo(rule));
-                otherRule.remove();
-            }
-        });
-    });
-});
-
-// get rid over over-ridden props in a rule
-const dedupeDecls = postcss.plugin('postcss-dedupe-declarations', (opts = {}) => css => {
-    css.walkRules(rule => {
-        const resolvedDecls = [];
-        rule.walkDecls(decl => {
-            const {prop, value} = decl;
-            resolvedDecls.push(postcss.decl({prop, value: resolveProp(rule, prop)}));
-        });
-        rule.removeAll();
-        rule.append(uniqBy(resolvedDecls, 'prop'));
-    });
-});
-
-// expand longhand rules
-const longhand = postcss.plugin('postcss-expand-longhand', (opts = {}) => css => {
-    css.walkDecls(decl => {
-        ['margin', 'padding'].forEach(prop => {
-            if (decl.prop === prop) {
-                const sides = parseSides(decl.value);
-                decl.replaceWith(Object.keys(sides).map(key => {
-                    return postcss.decl({prop: `${prop}-${key}`, value: sides[key]});
-                }));
-            }
-        })
-        if (decl.prop === 'font') {
-            const fontProps = parseFont(decl.value);
-            decl.replaceWith(Object.keys(fontProps).map(key => {
-                if (key === 'lineHeight') {
-                    return postcss.decl({prop: 'line-height', value: fontProps[key]});
-                }
-                return postcss.decl({prop: `font-${key}`, value: fontProps[key].toString()});
-            }))
-        }
-    });
-});
 
 // get hashes for each declaration
 const atomise = postcss.plugin('atomise', (json) => (css, result) => {
@@ -166,8 +107,8 @@ module.exports = postcss.plugin('postcss-atomised', ({json = path.resolve(proces
     reporter({clearMessages: true, throwError: true}),
     unchainSelectors(),
     mergeRules(),
-    longhand(),
-    dedupeDecls(),
+    expandShorthand(),
+    dedupeDeclarations(),
     atomise(json),
     mqpacker({sort: true})
 ]).process(result.root));
