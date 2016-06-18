@@ -17,22 +17,18 @@ import reporter from 'postcss-reporter';
 
 import hash from 'shorthash';
 
-// get hashes for each declaration
+// this does the bulk of the plugin's work, and is used below as part of
+// the general postcss().process() whose result is returned
 const atomise = postcss.plugin('atomise', (json) => (css, result) => {
-    const hashes = {}; // used to prevent duplicates
 
-    const getParents = node => {
-        const parents = [node];
-        while (node.parent) {
-            parents.push(node.parent);
-            node = node.parent;
-        }
-        return parents;
-    }
-
+    // we'll create a new root of atomic classes to return in the result
     const newRoot = [];
+
+    // place to store the map of original classnames to the atomic ones
     const atomicMap = {};
 
+    // firstly, pass any keyframes or font-face at-rules straight through
+    // to the atomic stylesheet
     css.walkAtRules(atRule => {
         if (['keyframes', 'font-face'].some(name => name === atRule.name)) {
             newRoot.push(atRule.clone());
@@ -40,6 +36,9 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
         };
     })
 
+    // next, pass any rules which don't use single classnames as selectors
+    // straight through to the atomic stylesheet (they're not really atomic,
+    // but maybe the design requires complex selectors – we shouldn't break it)
     css.walkRules(rule => {
         parseSelector(selectors => {
             selectors.each(selector => {
@@ -52,45 +51,70 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
         }).process(rule.selector);
     })
 
-    css.walkDecls(decl => {
-        let cssStr = '';
-        const declAtrules = [];
-        let declPseudos = [];
-        let parentClassname;
+    // now we have something we can atomise.
+    // we'll go through each declaration, and if we've not seen
+    // it in this context before (in this at-rule, with this pseudo etc),
+    // we creat a new atomic class that captures it and store that
+    // against a hash of the declaration + the context, for
+    // future reference
 
+    // get the context of this declaration
+    const getParents = node => {
+        const parents = [node];
+        while (node.parent) {
+            parents.push(node.parent);
+            node = node.parent;
+        }
+        return parents;
+    }
+
+    // create a new postcss object to describe an atomic representation
+    // of a declaration
+    const createAtomicRule = (decl, selector, atrules) => atrules.reduce((rule, atrule) => {
+        return postcss.atRule({name: atrule.name, params: atrule.params}).append(rule);
+    }, postcss.rule({selector}).append(decl));
+
+    // create the store for the hash/atomic rule pairs
+    const atomicRules = {};
+
+    // check each declaration...
+    css.walkDecls(decl => {
+        const contextAtrules = [];
+        let className, contextPseudos;
+
+        // get the context of a declaration
         getParents(decl).forEach(node => {
-            if (node.type === 'decl') {
-                cssStr += decl.toString();
-            }
             if (node.type === 'rule') {
-                const [className, ...pseudos] = node.selector.split(/::|:/);
-                cssStr += pseudos.join('');
-                declPseudos = pseudos;
-                parentClassname = className.replace(/^\./g, '');
+                [className, ...contextPseudos] = node.selector.split(/::|:/);
             }
             if (node.type === 'atrule') {
-                const {name, params} = node;
-                cssStr += `${name}${params}`;
-                declAtrules.push(node);
+                contextAtrules.push(node);
             }
         });
 
-        const hashed = hash.unique(cssStr);
-        if (!hashes.hasOwnProperty(hashed)) {
-            const pseudo = declPseudos.length ? `:${declPseudos.join(':')}` : '';
-            const shortClassName = numberToLetter(Object.keys(hashes).length);
+        // create a hash from the declaration + context
+        const key = hash.unique(createAtomicRule(decl, contextPseudos.join(''), contextAtrules).toString());
 
-            newRoot.push(declAtrules.reduce((rule, atrule) => {
-                return postcss.atRule({name: atrule.name, params: atrule.params}).append(rule);
-            }, postcss.rule({selector: `.${shortClassName}${pseudo}`}).append(decl)));
+        // if we've not seen this declaration in this context before...
+        if (!atomicRules.hasOwnProperty(key)) {
+            // create an atomic rule for it
+            const shortClassName = numberToLetter(Object.keys(atomicRules).length);
+            newRoot.push(createAtomicRule(decl, `.${shortClassName}${contextPseudos.map(p => `:${p}`).join('')}`, contextAtrules));
 
-            hashes[hashed] = shortClassName;
+            // then store the atomic selector against its hash
+            atomicRules[key] = shortClassName;
         }
 
-        atomicMap[parentClassname] = (atomicMap[parentClassname] || []);
-        atomicMap[parentClassname].push(hashes[hashed]);
+        // create a mapping from the selector to which this declaration
+        // belongs to the atomic rule which captures it
+        className = className.replace(/^\./g, '');
+        if (!atomicMap.hasOwnProperty(className)) {
+            atomicMap[className] = [];
+        };
+        atomicMap[className].push(atomicRules[key]);
     });
 
+    // clear out the old css and return the atomic rules
     result.root.removeAll();
     result.root.append(newRoot);
 
