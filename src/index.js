@@ -69,7 +69,8 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
     // create a new postcss object to describe an atomic representation
     // of a declaration
     const createAtomicRule = (decl, selector, atrules) => atrules.reduce((rule, atrule) => {
-        return postcss.atRule({name: atrule.name, params: atrule.params}).append(rule);
+        const {name, params} = atrule;
+        return postcss.atRule({name, params}).append(rule);
     }, postcss.rule({selector}).append(decl));
 
     // create the store for the hash/atomic rule pairs
