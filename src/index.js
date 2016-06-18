@@ -78,18 +78,12 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
 
     // check each declaration...
     css.walkDecls(decl => {
-        const contextAtrules = [];
-        let className, contextPseudos;
+
 
         // get the context of a declaration
-        getContext(decl).forEach(node => {
-            if (node.type === 'rule') {
-                [className, ...contextPseudos] = node.selector.split(/::|:/);
-            }
-            if (node.type === 'atrule') {
-                contextAtrules.push(node);
-            }
-        });
+        const context = getContext(decl);
+        const contextAtrules = context.filter(node => node.type === 'atrule');
+        const [className, ...contextPseudos] = context.filter(node => node.type === 'rule')[0].selector.split(/::|:/);
 
         // create a hash from the declaration + context
         const key = hash.unique(createAtomicRule(decl, contextPseudos.join(''), contextAtrules).toString());
@@ -106,11 +100,11 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
 
         // create a mapping from the selector to which this declaration
         // belongs to the atomic rule which captures it
-        className = className.replace(/^\./g, '');
-        if (!atomicMap.hasOwnProperty(className)) {
-            atomicMap[className] = [];
+        const mapClassName = className.replace(/^\./g, '');
+        if (!atomicMap.hasOwnProperty(mapClassName)) {
+            atomicMap[mapClassName] = [];
         };
-        atomicMap[className].push(atomicRules[key]);
+        atomicMap[mapClassName].push(atomicRules[key]);
     });
 
     // clear out the old css and return the atomic rules
