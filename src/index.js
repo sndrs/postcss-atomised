@@ -57,8 +57,8 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
     // future reference
 
     // get the context of this declaration
-    const getParents = node => {
-        const parents = [node];
+    const getContext = node => {
+        const parents = [];
         while (node.parent) {
             parents.push(node.parent);
             node = node.parent;
@@ -81,7 +81,7 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
         let className, contextPseudos;
 
         // get the context of a declaration
-        getParents(decl).forEach(node => {
+        getContext(decl).forEach(node => {
             if (node.type === 'rule') {
                 [className, ...contextPseudos] = node.selector.split(/::|:/);
             }
