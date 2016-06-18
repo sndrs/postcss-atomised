@@ -1,19 +1,18 @@
 import path from 'path';
 import { writeFile } from 'fs';
 import mkdirp from 'mkdirp';
+import hash from 'shorthash';
 
 import postcss from 'postcss';
 import parseSelector from 'postcss-selector-parser';
+import mqpacker from "css-mqpacker";
+import chalk from 'chalk';
 
 import mergeRules from './lib/merge-rules';
 import unchainSelectors from './lib/unchain-selectors';
 import dedupeDeclarations from './lib/dedupe-declarations';
 import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
-
-import mqpacker from "css-mqpacker";
-
-import hash from 'shorthash';
 
 // this does the bulk of the plugin's work, and is used below as part of
 // the general postcss().process() whose result is returned
@@ -44,6 +43,7 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
                 if (first.type !== "class" || rest.some(selector => selector.type !== 'pseudo')) {
                     newRoot.push(rule.clone());
                     rule.remove();
+                    result.warn(`${chalk.magenta(rule.selector)} cannot be atomised`, { node: rule });
                 }
             })
         }).process(rule.selector);
