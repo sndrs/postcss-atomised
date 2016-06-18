@@ -91,7 +91,8 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
         if (!atomicRules.hasOwnProperty(key)) {
             // create an atomic rule for it
             const shortClassName = numberToLetter(Object.keys(atomicRules).length);
-            newRoot.push(createAtomicRule(decl, `.${shortClassName}${contextPseudos.map(p => `:${p}`).join('')}`, contextAtrules));
+            const atomicClassName = `.${shortClassName}${contextPseudos.map(p => `:${p}`).join('')}`;
+            newRoot.push(createAtomicRule(decl, atomicClassName, contextAtrules));
 
             // then store the atomic selector against its hash
             atomicRules[key] = shortClassName;
