@@ -12,8 +12,6 @@ import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
 
 import mqpacker from "css-mqpacker";
-import stylelint from 'stylelint';
-import reporter from 'postcss-reporter';
 
 import hash from 'shorthash';
 
