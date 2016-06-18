@@ -78,7 +78,6 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
 
     // check each declaration...
     css.walkDecls(decl => {
-
         // get the context of a declaration
         const context = getContext(decl);
         const contextAtrules = context.filter(node => node.type === 'atrule');
