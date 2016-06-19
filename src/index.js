@@ -126,8 +126,8 @@ const atomise = (css, result, json) => {
     result.root.removeAll();
     result.root.append(newRoot);
 
-    // this one weird trick (`.then()`) seems to mean mpacker is applied...
-    mqpacker.process(result, {sort: true}).then();
+    // merge media queries and sort by min-width
+    mqpacker.pack(result, {sort: true}).css;
 
     reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 
