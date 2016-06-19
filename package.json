@@ -44,7 +44,7 @@
   },
   "scripts": {
     "start": "npm test -- --watch",
-    "test": "ava",
+    "test": "rm -rf test/build && ava",
     "build": "babel src -d build",
     "prepublish": "npm run build",
     "postpublish": "rm -rf build && git push --follow-tags"
