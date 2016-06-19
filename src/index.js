@@ -5,7 +5,6 @@ import hash from 'shorthash';
 
 import postcss from 'postcss';
 import parseSelector from 'postcss-selector-parser';
-import mqpacker from "css-mqpacker";
 import chalk from 'chalk';
 
 import mergeRules from './lib/merge-rules';
@@ -16,7 +15,18 @@ import numberToLetter from './lib/number-to-letter';
 
 // this does the bulk of the plugin's work, and is used below as part of
 // the general postcss().process() whose result is returned
-const atomise = postcss.plugin('atomise', (json) => (css, result) => {
+const atomise = (css, result, json) => {
+    // get single instances of each selector if its a list (.a, .b etc)
+    unchainSelectors(css);
+
+    // merge rules with the same selector in the same container (root, at-rule etc)
+    mergeRules(css);
+
+    // expand shorthand rules
+    expandShorthand(css);
+
+    // get rid over over-ridden props in a rule
+    dedupeDeclarations(css);
 
     // we'll create a new root of atomic classes to return in the result
     const newRoot = [];
@@ -116,13 +126,10 @@ const atomise = postcss.plugin('atomise', (json) => (css, result) => {
             writeFile(json, JSON.stringify(atomicMap, null, 2), resolve);
         });
     })
-});
+};
 
-module.exports = postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => (css, result) => postcss([
-    unchainSelectors(),
-    mergeRules(),
-    expandShorthand(),
-    dedupeDeclarations(),
-    atomise(json),
-    mqpacker({sort: true})
-]).process(result.root));
+export default postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
+    return (css, result) => {
+        return new Promise((resolve, reject) => atomise(css, result, json).then(resolve).catch(reject));
+    }
+});

@@ -3,7 +3,7 @@ import parseSides from 'parse-css-sides';
 import parseFont from 'parse-css-font';
 
 // expand shorthand rules
-export default postcss.plugin('expand-shorthand', (opts = {}) => css => {
+export default css => {
     css.walkDecls(decl => {
         ['margin', 'padding'].forEach(prop => {
             if (decl.prop === prop) {
@@ -23,4 +23,4 @@ export default postcss.plugin('expand-shorthand', (opts = {}) => css => {
             }))
         }
     });
-});
+};

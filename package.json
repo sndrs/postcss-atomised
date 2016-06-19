@@ -22,17 +22,13 @@
   ],
   "dependencies": {
     "chalk": "^1.1.3",
-    "css-mqpacker": "^4.0.1",
-    "junk": "^1.0.2",
     "lodash.uniqby": "^4.5.0",
     "mkdirp": "^0.5.1",
     "parse-css-font": "^2.0.2",
     "parse-css-sides": "^2.0.0",
-    "perfectionist": "^2.1.3",
     "postcss": "^5.0.19",
     "postcss-resolve-prop": "^3.1.0",
     "postcss-selector-parser": "^2.0.0",
-    "pretty-bytes": "^3.0.1",
     "shorthash": "0.0.2",
     "writefile": "^0.2.8"
   },
@@ -40,11 +36,15 @@
     "ava": "^0.15.0",
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
-    "babel-register": "^6.9.0"
+    "babel-register": "^6.9.0",
+    "css-mqpacker": "^4.0.1",
+    "junk": "^1.0.2",
+    "postcss-reporter": "^1.3.3",
+    "perfectionist": "^2.1.3"
   },
   "scripts": {
     "start": "npm test -- --watch",
-    "test": "ava",
+    "test": "rm -rf test/build && ava",
     "build": "babel src -d build",
     "prepublish": "npm run build",
     "postpublish": "rm -rf build && git push --follow-tags"
