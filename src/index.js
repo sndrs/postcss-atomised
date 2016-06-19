@@ -130,6 +130,6 @@ const atomise = (css, result, json) => {
 
 export default postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
     return (css, result) => {
-        atomise(css, result, json);
+        return new Promise((resolve, reject) => atomise(css, result, json).then(resolve).catch(reject));
     }
 });
