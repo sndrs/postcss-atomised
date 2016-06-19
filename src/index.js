@@ -5,30 +5,36 @@ import hash from 'shorthash';
 
 import postcss from 'postcss';
 import parseSelector from 'postcss-selector-parser';
+import mqpacker from "css-mqpacker";
+import stats from 'cssstats';
 import chalk from 'chalk';
 
 import mergeRules from './lib/merge-rules';
 import unchainSelectors from './lib/unchain-selectors';
-import dedupeDeclarations from './lib/dedupe-declarations';
+import resolveDeclarations from './lib/resolve-declarations';
 import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
+import reportStats from './lib/report-stats';
 
 // this does the bulk of the plugin's work, and is used below as part of
 // the general postcss().process() whose result is returned
 const atomise = (css, result, json) => {
-    // get single instances of each selector if its a list (.a, .b etc)
-    unchainSelectors(css);
+    reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
 
-    // merge rules with the same selector in the same container (root, at-rule etc)
-    mergeRules(css);
+    // Prepare the CSS for parseing
+    // get single instances of each selector if its a list
+    unchainSelectors(css); // .a, .b {} => .a {}; .b {}
+
+    // merge rules with the same selector if they have the same container (root, at-rule etc)
+    mergeRules(css); // .a {}; .a {} => .a {}
 
     // expand shorthand rules
-    expandShorthand(css);
+    expandShorthand(css); // margin to margin-top/right/bottom/left etc
 
-    // get rid over over-ridden props in a rule
-    dedupeDeclarations(css);
+    // get rid over over-ridden props in a rule (like the cascade would).
+    resolveDeclarations(css); // .a {color: red; color: blue} => .a {color: blue}
 
-    // we'll create a new root of atomic classes to return in the result
+    // Now we'll create a new root of atomic classes to eventually return in the result
     const newRoot = [];
 
     // place to store the map of original classnames to the atomic ones
@@ -119,6 +125,11 @@ const atomise = (css, result, json) => {
     // clear out the old css and return the atomic rules
     result.root.removeAll();
     result.root.append(newRoot);
+
+    // this one weird trick (`.then()`) seems to mean mpacker is applied...
+    mqpacker.process(result, {sort: true}).then();
+
+    reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 
     return new Promise((resolve, reject) => {
         mkdirp(path.dirname(json), err => {

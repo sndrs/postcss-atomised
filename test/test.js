@@ -7,13 +7,11 @@ import postcss from "postcss";
 import atomised from '../src';
 import perfectionist from "perfectionist";
 import reporter from 'postcss-reporter';
-import mqpacker from "css-mqpacker";
 
 const fixturePath = check => `./fixtures/${check}`;
 
 const srcCSS = check => postcss([
     atomised({json: path.resolve('./output/', `${check}.json`)}),
-    mqpacker({sort: true}),
     reporter(),
     perfectionist({format: 'compact'})
 ]).process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'), {from: `${fixturePath(check)}/src.css`});
