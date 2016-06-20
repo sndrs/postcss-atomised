@@ -39,7 +39,7 @@
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-register": "^6.9.0",
-    "css-mqpacker": "^4.0.1",
+    "css-mqpacker": "^5.0.1",
     "junk": "^1.0.2",
     "postcss-reporter": "^1.3.3",
     "perfectionist": "^2.1.3"
