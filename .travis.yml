@@ -10,3 +10,5 @@ notifications:
   email:
     on_success: change
     on_failure: always
+after_success:
+    - '[ -z "$COVERALLS_REPO_TOKEN" ] && tap --coverage-report=text-lcov | ./node_modules/.bin/coveralls'
