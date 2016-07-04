@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start": "npm test -- --watch",
-    "test": "rm -rf test/output && ava",
+    "test": "rm -rf test/output && nyc ava",
     "build": "rm -rf build && rollup -c",
     "prepublish": "npm run build",
     "postpublish": "rm -rf build && git push --follow-tags",
