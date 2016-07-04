@@ -54,7 +54,8 @@
     "test": "rm -rf test/output && ava",
     "build": "rm -rf build && rollup -c",
     "prepublish": "npm run build",
-    "postpublish": "rm -rf build && git push --follow-tags"
+    "postpublish": "rm -rf build && git push --follow-tags",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "ava": {
     "files": [
