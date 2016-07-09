@@ -11,7 +11,7 @@ import reporter from 'postcss-reporter';
 const fixturePath = check => `./fixtures/${check}`;
 
 const srcCSS = check => postcss([
-    atomised({json: path.resolve('./output/', `${check}.json`)}),
+    atomised(),
     reporter(),
     perfectionist({format: 'compact'})
 ]).process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'), {from: `${fixturePath(check)}/src.css`});
@@ -26,10 +26,7 @@ readdirSync('fixtures').filter(junk.not)
     // .filter(check => check === 'chained')
     .forEach(check => {
         test(check, t => srcCSS(check).then((result) => {
-            const json = require(`./output/${check}.json`);
             t.is(result.css, expectedCSS(check).css);
-            t.deepEqual(json, expectedMap(check));
-            // console.log(result.warnings());
-            // console.log(result.css);
+            t.deepEqual(result.atomicMap, expectedMap(check));
         }));
     });

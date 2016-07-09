@@ -131,12 +131,9 @@ const atomise = (css, result, json) => {
 
     reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 
-    return new Promise((resolve, reject) => {
-        mkdirp(path.dirname(json), err => {
-            if (err) reject(err);
-            writeFile(json, JSON.stringify(atomicMap, null, 2), resolve);
-        });
-    })
+    result.atomicMap = atomicMap;
+
+    return Promise.resolve();
 };
 
 export default postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
