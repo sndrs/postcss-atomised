@@ -1,7 +1,7 @@
 # Atomised CSS
 [![npm version](https://badge.fury.io/js/postcss-atomised.svg)](https://badge.fury.io/js/postcss-atomised) [![Build Status](https://travis-ci.org/sndrs/postcss-atomised.svg?branch=master)](https://travis-ci.org/sndrs/postcss-atomised) [![Coverage Status](https://coveralls.io/repos/github/sndrs/postcss-atomised/badge.svg?branch=master)](https://coveralls.io/github/sndrs/postcss-atomised?branch=master)  [![Dependency Status](https://david-dm.org/sndrs/postcss-atomised.svg)](https://david-dm.org/sndrs/postcss-atomised) [![devDependency Status](https://david-dm.org/sndrs/postcss-atomised/dev-status.svg)](https://david-dm.org/sndrs/postcss-atomised#info=devDependencies)
 
-[PostCSS](http://postcss.org) plugin that creates an atomised stylesheet from a standard one, and provides a json map from the original classes to the atomic ones.
+[PostCSS](http://postcss.org) plugin that [atomises](http://www.creativebloq.com/css3/atomic-css-11619006) a standard set of CSS, and provides a json map from the original classes to the atomic ones.
 
 It will turn this:
 
@@ -43,7 +43,7 @@ and this `atomicMap`:
 }
 ```
 
-The idea is that in development, you leave your big stylesheet alone, with sourcemaps etc all intact. In production though, you would inline the atomic CSS and then using the json map, transform the following:
+The idea is that in development, you leave your big stylesheet alone, with sourcemaps etc all intact. In production though, you could inline the atomic CSS and then using the `atomicMap` json, transform the following:
 
 ```HTML
 <div class="one"></div>
@@ -57,9 +57,9 @@ into:
 <div class="a c g h"></div>
 ```
 
-This means you should be able to write your CSS in a super-modular way, without worrying about the bloat.
+This should mean you can the get benefit of writing CSS in an insolated, super-modular fashion without worrying about the bloat of duplication (the only way you could serve a smaller stylesheet would be to use fewer styles).
 
-### Selector requirements
+### Restrictions
 - only single class selectors can be atomised (other selectors will pass straight through)
 - pseudo selectors/elements are fine
 - multiple/duplicate selectors are fine
@@ -79,9 +79,6 @@ This means you should be able to write your CSS in a super-modular way, without 
 | `a + b { }`  | :x:  |
 | `a ~ b { }`  | :x:  |
 | `*`  | :x:  |
-
-
-All elements that you want to benefit from atomisation can only use one class from the original stylesheet. This means that those elements are completely isolated. And because it reduces a compatible stylesheet to only its resolved declarations, any duplication across atmomised rules will be eradicated.
 
 ## Usage
 
