@@ -1,4 +1,4 @@
-# Atomised CSS 
+# Atomised CSS
 [![npm version](https://badge.fury.io/js/postcss-atomised.svg)](https://badge.fury.io/js/postcss-atomised) [![Build Status](https://travis-ci.org/sndrs/postcss-atomised.svg?branch=master)](https://travis-ci.org/sndrs/postcss-atomised) [![Coverage Status](https://coveralls.io/repos/github/sndrs/postcss-atomised/badge.svg?branch=master)](https://coveralls.io/github/sndrs/postcss-atomised?branch=master)  [![Dependency Status](https://david-dm.org/sndrs/postcss-atomised.svg)](https://david-dm.org/sndrs/postcss-atomised) [![devDependency Status](https://david-dm.org/sndrs/postcss-atomised/dev-status.svg)](https://david-dm.org/sndrs/postcss-atomised#info=devDependencies)
 
 [PostCSS](http://postcss.org) plugin that creates an atomised stylesheet from a standard one, and provides a json map from the original classes to the atomic ones.
@@ -21,7 +21,7 @@ It will turn this:
 }
 ```
 
-into this:
+into this atomised `css`:
 
 ```CSS
 .a { background-color: red; }
@@ -34,7 +34,7 @@ into this:
 }
 ```
 
-and this:
+and this `atomicMap`:
 
 ```JSON
 {
@@ -89,12 +89,9 @@ All elements that you want to benefit from atomisation can only use one class fr
 import postcss from 'postcss';
 import atomised from 'postcss-atomised';
 
-const options = {
-    json: path_to_where_the_json_should_go
-};
-
-postcss([atomised(options)]).process(css).then(result => {
-    // do something with `result`
+postcss([atomised()]).process(css).then(result => {
+    // result.css => atomised css
+    // result.atomicMap => json map from the original classes to the atomic ones
 });
 ```
 
