@@ -27,6 +27,6 @@ readdirSync('fixtures').filter(junk.not)
     .forEach(check => {
         test(check, t => srcCSS(check).then((result) => {
             t.is(result.css, expectedCSS(check).css);
-            t.deepEqual(result.atomicMap, expectedMap(check));
+            t.deepEqual(result.atomisedClassMap, expectedMap(check));
         }));
     });

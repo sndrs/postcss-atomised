@@ -131,7 +131,7 @@ const atomise = (css, result, json) => {
 
     reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 
-    result.atomicMap = atomicMap;
+    result.atomisedClassMap = atomicMap;
 
     return Promise.resolve();
 };
