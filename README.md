@@ -1,6 +1,10 @@
 # Atomised CSS
 [![npm version](https://badge.fury.io/js/postcss-atomised.svg)](https://badge.fury.io/js/postcss-atomised) [![Build Status](https://travis-ci.org/sndrs/postcss-atomised.svg?branch=master)](https://travis-ci.org/sndrs/postcss-atomised) [![Coverage Status](https://coveralls.io/repos/github/sndrs/postcss-atomised/badge.svg?branch=master)](https://coveralls.io/github/sndrs/postcss-atomised?branch=master)  [![Dependency Status](https://david-dm.org/sndrs/postcss-atomised.svg)](https://david-dm.org/sndrs/postcss-atomised) [![devDependency Status](https://david-dm.org/sndrs/postcss-atomised/dev-status.svg)](https://david-dm.org/sndrs/postcss-atomised#info=devDependencies)
 
+_Note that this is under active, initial developement for use on https://www.theguardian.com – it is not stable ;) The API etc may well change before hitting v1._
+
+-
+
 [PostCSS](http://postcss.org) plugin that [atomises](http://www.creativebloq.com/css3/atomic-css-11619006) a standard set of CSS, and provides a json map from the original classes to the atomic ones.
 
 It will turn this:
