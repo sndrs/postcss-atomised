@@ -1,6 +1,3 @@
-import path from 'path';
-import { writeFile } from 'fs';
-import mkdirp from 'mkdirp';
 import hash from 'shorthash';
 
 import postcss from 'postcss';
@@ -18,7 +15,7 @@ import reportStats from './lib/report-stats';
 
 // this does the bulk of the plugin's work, and is used below as part of
 // the general postcss().process() whose result is returned
-const atomise = (css, result, json) => {
+const atomise = (css, result) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
 
     // Prepare the CSS for parseing
@@ -136,8 +133,8 @@ const atomise = (css, result, json) => {
     return Promise.resolve();
 };
 
-export default postcss.plugin('postcss-atomised', ({json = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
+export default postcss.plugin('postcss-atomised', () => {
     return (css, result) => {
-        return new Promise((resolve, reject) => atomise(css, result, json).then(resolve).catch(reject));
+        return new Promise((resolve, reject) => atomise(css, result).then(resolve).catch(reject));
     }
 });
