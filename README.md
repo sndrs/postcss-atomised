@@ -38,7 +38,7 @@ into this atomised `css`:
 }
 ```
 
-and this `atomicMap`:
+and this `atomisedClassMap`:
 
 ```JSON
 {
@@ -92,7 +92,7 @@ import atomised from 'postcss-atomised';
 
 postcss([atomised()]).process(css).then(result => {
     // result.css => atomised css
-    // result.atomicMap => json map from the original classes to the atomic ones
+    // result.atomisedClassMap => json map from the original classes to the atomic ones
 });
 ```
 
