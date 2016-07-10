@@ -25,15 +25,13 @@
     "css-mqpacker": "^5.0.1",
     "cssstats": "^3.0.0-beta.1",
     "lodash.uniqby": "^4.5.0",
-    "mkdirp": "^0.5.1",
     "parse-css-font": "^2.0.2",
     "parse-css-sides": "^2.0.0",
     "postcss": "^5.0.19",
     "postcss-resolve-prop": "^3.1.0",
     "postcss-selector-parser": "^2.0.0",
     "pretty-bytes": "^3.0.1",
-    "shorthash": "0.0.2",
-    "writefile": "^0.2.8"
+    "shorthash": "0.0.2"
   },
   "devDependencies": {
     "ava": "^0.15.0",
