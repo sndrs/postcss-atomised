@@ -13,31 +13,32 @@ import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
 import reportStats from './lib/report-stats';
 
-// this does the bulk of the plugin's work, and is used below as part of
-// the general postcss().process() whose result is returned
 const atomise = (css, result) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
 
-    // Prepare the CSS for parseing
-    // get single instances of each selector if its a list
+    // Prepare the CSS for parsing:
+
+    // 1. get single instances of each selector if its a list
     unchainSelectors(css); // .a, .b {} => .a {}; .b {}
 
-    // merge rules with the same selector if they have the same container (root, at-rule etc)
+    // 2. merge rules with the same selector if they have the same container (root, at-rule etc)
     mergeRules(css); // .a {}; .a {} => .a {}
 
-    // expand shorthand rules
+    // 3. expand shorthand rules
     expandShorthand(css); // margin to margin-top/right/bottom/left etc
 
-    // get rid over over-ridden props in a rule (like the cascade would).
+    // 4. get rid over over-ridden props in a rule (like the cascade would).
     resolveDeclarations(css); // .a {color: red; color: blue} => .a {color: blue}
 
     // Now we'll create a new root of atomic classes to eventually return in the result
     const newRoot = [];
 
-    // place to store the map of original classnames to the atomic ones
+    // Next, we need a place to store the map of original classnames to the atomic ones
     const atomicMap = {};
 
-    // firstly, pass any keyframes or font-face at-rules straight through
+    // Now we're ready to start...
+
+    // Pass any keyframes or font-face at-rules straight through
     // to the atomic stylesheet
     css.walkAtRules(atRule => {
         if (['keyframes', 'font-face'].some(name => name === atRule.name)) {
@@ -46,7 +47,7 @@ const atomise = (css, result) => {
         };
     })
 
-    // next, pass any rules which don't use single classnames as selectors
+    // Next, pass any rules which don't use single classnames as selectors
     // straight through to the atomic stylesheet (they're not really atomic,
     // but maybe the design requires complex selectors – we shouldn't break it)
     css.walkRules(rule => {
@@ -62,14 +63,15 @@ const atomise = (css, result) => {
         }).process(rule.selector);
     })
 
-    // now we have something we can atomise.
-    // we'll go through each declaration, and if we've not seen
+    // Now we have something we can atomise...
+
+    // We'll go through each declaration, and if we've not seen
     // it in this context before (in this at-rule, with this pseudo etc),
     // we creat a new atomic class that captures it and store that
     // against a hash of the declaration + the context, for
     // future reference
 
-    // get the context of this declaration
+    // Helper to get the context of this declaration
     const getContext = node => {
         const parents = [];
         while (node.parent) {
@@ -79,7 +81,7 @@ const atomise = (css, result) => {
         return parents;
     }
 
-    // create a new postcss object to describe an atomic representation
+    // Create a new postcss object to describe an atomic representation
     // of a declaration
     const createAtomicRule = (decl, selector, atrules) => atrules.reduce((rule, atrule) => {
         const {name, params} = atrule;
@@ -126,15 +128,10 @@ const atomise = (css, result) => {
     // merge media queries and sort by min-width
     mqpacker.pack(result, {sort: true}).css;
 
-    reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
-
+    // attach the atomicMap to the result
     result.atomisedClassMap = atomicMap;
 
-    return Promise.resolve();
+    reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 };
 
-export default postcss.plugin('postcss-atomised', () => {
-    return (css, result) => {
-        return new Promise((resolve, reject) => atomise(css, result).then(resolve).catch(reject));
-    }
-});
+export default postcss.plugin('postcss-atomised', () => atomise);
