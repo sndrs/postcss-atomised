@@ -38,7 +38,7 @@ into this atomised `css`:
 }
 ```
 
-and this `atomisedClassMap`:
+and this json map`:
 
 ```JSON
 {
@@ -47,7 +47,7 @@ and this `atomisedClassMap`:
 }
 ```
 
-The idea is that in development, you leave your big stylesheet alone, with sourcemaps etc all intact. In production though, you could inline the atomic CSS and then using the `atomicMap` json, transform the following:
+The idea is that in development, you leave your big stylesheet alone, with sourcemaps etc all intact. In production though, you could inline the atomic CSS and then using the json map, transform the following:
 
 ```HTML
 <div class="one"></div>
@@ -90,9 +90,11 @@ This should mean you can the get benefit of writing CSS in an insolated, super-m
 import postcss from 'postcss';
 import atomised from 'postcss-atomised';
 
-postcss([atomised()]).process(css).then(result => {
+postcss([atomised({
+    jsonPath: 'path/to/json'
+})]).process(css).then(result => {
     // result.css => atomised css
-    // result.atomisedClassMap => json map from the original classes to the atomic ones
+    // atomic map is written to path/to/json.json
 });
 ```
 
