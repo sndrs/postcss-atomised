@@ -1,4 +1,12 @@
+import path from 'path';
+import { writeFile } from 'fs';
+
+import mkdirp from 'mkdirp';
 import hash from 'shorthash';
+import pify from 'pify';
+
+const writeFileP = pify(writeFile);
+const mkdirpP = pify(mkdirp);
 
 import postcss from 'postcss';
 import parseSelector from 'postcss-selector-parser';
@@ -13,7 +21,7 @@ import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
 import reportStats from './lib/report-stats';
 
-const atomise = (css, result) => {
+const atomise = (css, result, jsonPath) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
 
     // Prepare the CSS for parsing:
@@ -128,10 +136,16 @@ const atomise = (css, result) => {
     // merge media queries and sort by min-width
     mqpacker.pack(result, {sort: true}).css;
 
-    // attach the atomicMap to the result
-    result.atomisedClassMap = atomicMap;
-
     reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
+
+    // save the JSON file
+    return mkdirpP(path.dirname(jsonPath))
+        .then(() =>
+            writeFileP(jsonPath, JSON.stringify(atomicMap, null, 2))
+        );
 };
 
-export default postcss.plugin('postcss-atomised', () => atomise);
+export default postcss.plugin('postcss-atomised', ({jsonPath = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
+    return (css, result) => atomise(css, result, jsonPath);
+});
+
