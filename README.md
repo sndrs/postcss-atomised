@@ -38,7 +38,7 @@ into this atomised `css`:
 }
 ```
 
-and this json map`:
+and this json map:
 
 ```JSON
 {
@@ -90,11 +90,12 @@ This should mean you can the get benefit of writing CSS in an insolated, super-m
 import postcss from 'postcss';
 import atomised from 'postcss-atomised';
 
-postcss([atomised({
-    jsonPath: 'path/to/json'
-})]).process(css).then(result => {
+const options = {
+    jsonPath: 'path/to/json' // atomic map is written to path/to/json.json
+};
+
+postcss([atomised(options)]).process(css).then(result => {
     // result.css => atomised css
-    // atomic map is written to path/to/json.json
 });
 ```
 
