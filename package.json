@@ -1,6 +1,6 @@
 {
   "name": "postcss-atomised",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "PostCSS plugin that creates an atomised stylesheet from the input CSS, and provides a json map from the original classes to the atomic ones.",
   "main": "build/index.js",
   "repository": {
