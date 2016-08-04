@@ -1,5 +1,3 @@
-import postcss from 'postcss';
-
 // get single instances of each selector if its a list (.a, .b etc)
 export default css => {
     css.walkRules(rule => {
