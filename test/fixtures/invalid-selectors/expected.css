@@ -8,4 +8,11 @@
 #id { content: '#id'; }
 element { content: 'element'; }
 * { content: 'universal'; }
+element-2, element-3 { content: 'multiple element'; }
+element-4, .b { content: 'class + element'; }
+body { color: red; }
+
 .a { content: '.class'; }
+@media (min-width: 960px) {
+    body, .c { color: blue; }
+}

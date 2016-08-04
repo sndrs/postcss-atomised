@@ -9,20 +9,28 @@ const writeFileP = pify(writeFile);
 const mkdirpP = pify(mkdirp);
 
 import postcss from 'postcss';
-import parseSelector from 'postcss-selector-parser';
 import mqpacker from "css-mqpacker";
 import stats from 'cssstats';
 import chalk from 'chalk';
 
-import mergeRules from './lib/merge-rules';
+import mergeRulesBySelector from './lib/merge-rules-by-selector';
+import mergeRulesByDeclarations from './lib/merge-rules-by-declarations';
 import unchainSelectors from './lib/unchain-selectors';
+import passthruUnatomisable from './lib/passthru-unatomisable';
 import resolveDeclarations from './lib/resolve-declarations';
 import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
 import reportStats from './lib/report-stats';
+import getContext from './lib/get-context';
 
 const atomise = (css, result, jsonPath) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
+
+    // We'll create a new root of atomic classes to eventually return in the result
+    const newRoot = [];
+
+    // We also need a place to store the map of original classnames to the atomic ones
+    const atomicMap = {};
 
     // Prepare the CSS for parsing:
 
@@ -30,19 +38,13 @@ const atomise = (css, result, jsonPath) => {
     unchainSelectors(css); // .a, .b {} => .a {}; .b {}
 
     // 2. merge rules with the same selector if they have the same container (root, at-rule etc)
-    mergeRules(css); // .a {}; .a {} => .a {}
+    mergeRulesBySelector(css); // .a {}; .a {} => .a {}
 
     // 3. expand shorthand rules
     expandShorthand(css); // margin to margin-top/right/bottom/left etc
 
     // 4. get rid over over-ridden props in a rule (like the cascade would).
     resolveDeclarations(css); // .a {color: red; color: blue} => .a {color: blue}
-
-    // Now we'll create a new root of atomic classes to eventually return in the result
-    const newRoot = [];
-
-    // Next, we need a place to store the map of original classnames to the atomic ones
-    const atomicMap = {};
 
     // Now we're ready to start...
 
@@ -55,21 +57,10 @@ const atomise = (css, result, jsonPath) => {
         };
     })
 
-    // Next, pass any rules which don't use single classnames as selectors
+    // Pass any rules which don't use single classnames as selectors
     // straight through to the atomic stylesheet (they're not really atomic,
     // but maybe the design requires complex selectors – we shouldn't break it)
-    css.walkRules(rule => {
-        parseSelector(selectors => {
-            selectors.each(selector => {
-                const [first, ...rest] = selector.nodes;
-                if (first.type !== "class" || rest.some(selector => selector.type !== 'pseudo')) {
-                    newRoot.push(rule.clone());
-                    rule.remove();
-                    result.warn(`${chalk.magenta(rule.selector)} cannot be atomised`, { node: rule });
-                }
-            })
-        }).process(rule.selector);
-    })
+    passthruUnatomisable(css, newRoot, result);
 
     // Now we have something we can atomise...
 
@@ -79,22 +70,14 @@ const atomise = (css, result, jsonPath) => {
     // against a hash of the declaration + the context, for
     // future reference
 
-    // Helper to get the context of this declaration
-    const getContext = node => {
-        const parents = [];
-        while (node.parent) {
-            parents.push(node.parent);
-            node = node.parent;
-        }
-        return parents;
-    }
-
     // Create a new postcss object to describe an atomic representation
     // of a declaration
-    const createAtomicRule = (decl, selector, atrules) => atrules.reduce((rule, atrule) => {
-        const {name, params} = atrule;
-        return postcss.atRule({name, params}).append(rule);
-    }, postcss.rule({selector}).append(decl));
+    function createAtomicRule (decl, selector, atrules) {
+        return atrules.reduce((rule, atrule) => {
+            const {name, params} = atrule;
+            return postcss.atRule({name, params}).append(rule);
+        }, postcss.rule({selector}).append(decl));
+    }
 
     // create the store for the hash/atomic rule pairs
     const atomicRules = {};
@@ -135,6 +118,10 @@ const atomise = (css, result, jsonPath) => {
 
     // merge media queries and sort by min-width
     mqpacker.pack(result, {sort: true}).css;
+
+    // combine any rules that have the same contents
+    // e.g. unatomiseable/atomisable ones
+    mergeRulesByDeclarations(css); // body {color: red}; .a {color: red} => body, .a {color: red}
 
     reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 

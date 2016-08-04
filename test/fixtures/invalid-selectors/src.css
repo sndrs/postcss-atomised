@@ -7,5 +7,16 @@
 [attribute] { content: '[attribute]' }
 .class[attribute] { content: '.class[attribute]' }
 #id { content: '#id' }
-element {content: 'element'}
+element { content: 'element' }
 * { content: 'universal' }
+element-2, element-3 { content: 'multiple element'; }
+.class-2, element-4 { content: 'class + element'; }
+body { color: red; }
+@media (min-width: 960px) {
+    body {
+        color: blue;
+    }
+    .blue {
+        color: blue;
+    }
+}
