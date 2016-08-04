@@ -9,7 +9,6 @@ const writeFileP = pify(writeFile);
 const mkdirpP = pify(mkdirp);
 
 import postcss from 'postcss';
-import parseSelector from 'postcss-selector-parser';
 import mqpacker from "css-mqpacker";
 import stats from 'cssstats';
 import chalk from 'chalk';
@@ -17,10 +16,12 @@ import chalk from 'chalk';
 import mergeRulesBySelector from './lib/merge-rules-by-selector';
 import mergeRulesByDeclarations from './lib/merge-rules-by-declarations';
 import unchainSelectors from './lib/unchain-selectors';
+import passthruUnatomisable from './lib/passthru-unatomisable';
 import resolveDeclarations from './lib/resolve-declarations';
 import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
 import reportStats from './lib/report-stats';
+import getContext from './lib/get-context';
 
 const atomise = (css, result, jsonPath) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
@@ -30,16 +31,6 @@ const atomise = (css, result, jsonPath) => {
 
     // We also need a place to store the map of original classnames to the atomic ones
     const atomicMap = {};
-
-    // Helper to get the context of a node
-    const getContext = node => {
-        const parents = [];
-        while (node.parent) {
-            parents.push(node.parent);
-            node = node.parent;
-        }
-        return parents;
-    }
 
     // Prepare the CSS for parsing:
 
@@ -69,29 +60,7 @@ const atomise = (css, result, jsonPath) => {
     // Pass any rules which don't use single classnames as selectors
     // straight through to the atomic stylesheet (they're not really atomic,
     // but maybe the design requires complex selectors – we shouldn't break it)
-    css.walkRules(rule => {
-        parseSelector(selectors => {
-            selectors.each(selector => {
-                const [first, ...rest] = selector.nodes;
-                if (first.type !== "class" || rest.some(selector => selector.type !== 'pseudo')) {
-                    const newRuleInContext = getContext(rule).reduce((newRule, context) => {
-                        if (context !== rule.root()) {
-                            const newParent = context.clone();
-                            newParent.removeAll();
-                            newParent.append(newRule);
-                            return newParent;
-                        } else {
-                            return newRule;
-                        }
-                    }, rule.clone());
-                    newRoot.push(newRuleInContext);
-                    rule.remove();
-                    result.warn(`${chalk.magenta(rule.selector)} cannot be atomised`, { node: rule });
-                }
-                return false;
-            })
-        }).process(rule.selector);
-    })
+    passthruUnatomisable(css, newRoot, result);
 
     // Now we have something we can atomise...
 
