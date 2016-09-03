@@ -20,6 +20,9 @@
     "atomic",
     "atomic-css"
   ],
+  "engines": {
+    "node": ">=4"
+  },
   "dependencies": {
     "chalk": "^1.1.3",
     "css-mqpacker": "^5.0.1",
