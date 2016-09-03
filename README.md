@@ -102,5 +102,5 @@ postcss([atomised(options)]).process(css).then(result => {
 ## Development
 Run `npm start` to run the Ava test runner in watch mode, or `npm test` for a one-off.
 
-## Node.js 0.10
-As it's a PostCSS plugin, [their caveat](https://github.com/postcss/postcss#nodejs-010-and-the-promise-api) about v0.10 applies.
+## Node.js 0.*
+Node 4 or greater is needed to use it.

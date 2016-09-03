@@ -1,34 +1,34 @@
 import test from 'ava';
 
 import {readFileSync, readdirSync} from 'fs';
-import junk from 'junk';
+import globby from 'globby';
 import path from 'path';
 import postcss from "postcss";
 import atomised from '../src';
 import perfectionist from "perfectionist";
 import reporter from 'postcss-reporter';
 
-const fixturePath = check => `./fixtures/${check}`;
-
 const srcCSS = check => postcss([
     atomised({jsonPath: path.resolve('./output/', `${check}.json`)}),
     reporter(),
     perfectionist({format: 'compact'})
-]).process(readFileSync(`${fixturePath(check)}/src.css`, 'utf8'), {from: `${fixturePath(check)}/src.css`});
+]).process(readFileSync(`${check}/src.css`, 'utf8'), {from: `${check}/src.css`});
 
 const expectedCSS = check => postcss([
     perfectionist({format: 'compact'})
-]).process(readFileSync(`${fixturePath(check)}/expected.css`, 'utf8'));
+]).process(readFileSync(`${check}/expected.css`, 'utf8'));
 
-const expectedMap = check => require(`${fixturePath(check)}/expected.json`);
-
-readdirSync('fixtures').filter(junk.not)
+globby(['./fixtures/*']).then(paths => {
     // .filter(check => check === 'invalid-selectors')
-    .forEach(check => {
+    paths.forEach(check => {
         test(check, t => srcCSS(check).then((result) => {
-            const json = require(`./output/${check}.json`);
             t.is(result.css, expectedCSS(check).css);
-            t.deepEqual(json, expectedMap(check));
+
+            const resultJson = require(`./output/${check}.json`);
+            const expectedJson = require(`${check}/expected.json`);
+            t.deepEqual(resultJson, expectedJson);
+
             // console.log(result.css)
         }));
     });
+});
