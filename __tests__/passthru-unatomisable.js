@@ -9,7 +9,6 @@ function parse(css) {
     return perfectionist.process(src).css.trim();
 }
 
-
 it('removes ID selectors', () => {
     expect(parse(`
         #a {
