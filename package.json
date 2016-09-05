@@ -40,7 +40,6 @@
     "shorthash": "0.0.2"
   },
   "devDependencies": {
-    "ava": "^0.16.0",
     "babel-cli": "^6.9.0",
     "babel-plugin-transform-async-to-generator": "^6.8.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
@@ -61,18 +60,6 @@
     "build": "rm -rf build && rollup -c",
     "prepublish": "npm run build",
     "postpublish": "rm -rf build && git push --follow-tags",
-  },
-  "ava": {
-    "files": [
-      "test/test.js"
-    ],
-    "source": [
-      "src/**/*",
-      "test/fixtures/**/*"
-    ],
-    "require": [
-      "babel-register"
-    ]
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test": "jest"
   }
