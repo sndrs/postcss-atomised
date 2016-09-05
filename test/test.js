@@ -24,16 +24,18 @@ globby(['./fixtures/*'])
         paths
         // .filter(path => /invalid-selectors/.test(path))
         .forEach(fixture => {
-            test(fixture, t => srcCSS(fixture).then(result => {
-                const resultJSON = require(`./output/${fixture}.json`);
-                const expectedJSON = require(`${fixture}/expected.json`);
-                const expectedCSS = getExpectedCSS(fixture).css;
+            test(fixture, t => srcCSS(fixture)
+                .then(result => {
+                    const resultJSON = require(`./output/${fixture}.json`);
+                    const expectedJSON = require(`${fixture}/expected.json`);
+                    const expectedCSS = getExpectedCSS(fixture).css;
 
-                t.is(result.css, expectedCSS);
-                t.deepEqual(resultJSON, expectedJSON);
+                    t.is(result.css, expectedCSS);
+                    t.deepEqual(resultJSON, expectedJSON);
 
-                // console.log(result.css)
-            }));
+                    // console.log(result.css)
+                })
+            );
         });
     })
     .catch(console.log);
