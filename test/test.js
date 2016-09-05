@@ -8,27 +8,34 @@ import atomised from '../src';
 import perfectionist from "perfectionist";
 import reporter from 'postcss-reporter';
 
-const srcCSS = check => postcss([
-    atomised({jsonPath: path.resolve('./output/', `${check}.json`)}),
+const srcCSS = fixture => postcss([
+    atomised({jsonPath: path.resolve('./output/', `${fixture}.json`)}),
     reporter(),
     perfectionist({format: 'compact'})
-]).process(readFileSync(`${check}/src.css`, 'utf8'), {from: `${check}/src.css`});
+]).process(readFileSync(`${fixture}/src.css`, 'utf8'), {from: `${fixture}/src.css`});
 
-const expectedCSS = check => postcss([
+const getExpectedCSS = fixture => postcss([
     perfectionist({format: 'compact'})
-]).process(readFileSync(`${check}/expected.css`, 'utf8'));
+]).process(readFileSync(`${fixture}/expected.css`, 'utf8'));
 
-globby(['./fixtures/*']).then(paths => {
-    // .filter(check => check === 'invalid-selectors')
-    paths.forEach(check => {
-        test(check, t => srcCSS(check).then((result) => {
-            t.is(result.css, expectedCSS(check).css);
+globby(['./fixtures/*'])
+    .then(paths => {
+        console.log(paths);
+        paths
+        // .filter(path => /invalid-selectors/.test(path))
+        .forEach(fixture => {
+            test(fixture, t => srcCSS(fixture)
+                .then(result => {
+                    const resultJSON = require(`./output/${fixture}.json`);
+                    const expectedJSON = require(`${fixture}/expected.json`);
+                    const expectedCSS = getExpectedCSS(fixture).css;
 
-            const resultJson = require(`./output/${check}.json`);
-            const expectedJson = require(`${check}/expected.json`);
-            t.deepEqual(resultJson, expectedJson);
+                    t.is(result.css, expectedCSS);
+                    t.deepEqual(resultJSON, expectedJSON);
 
-            // console.log(result.css)
-        }));
-    });
-});
+                    // console.log(result.css)
+                })
+            );
+        });
+    })
+    .catch(console.log);
