@@ -1,0 +1,40 @@
+<style>
+.parent .descendant { content: '.parent .descendant' }
+.parent.shared { content: '.parent.shared' }
+.parent > .child { content: '.parent > .child' }
+.parent + .adjacent { content: '.parent + .adjacent' }
+.parent ~ .siblings { content: '.parent ~ .siblings' }
+.parent { content: '.parent' }
+[attribute] { content: '[attribute]' }
+.parent[attribute] { content: '.parent[attribute]' }
+#id { content: '#id' }
+a { content: 'element' }
+* { content: 'universal' }
+element-2, element-3 { content: 'multiple element'; }
+.class-2, element-4 { content: 'class + element'; }
+@media (min-width: 960px) {
+    a {
+        content: 'element in MQ'
+    }
+    .blue {
+        color: blue;
+    }
+}
+</style>
+<div class="parent" attribute="">
+    <div class="child"></div>
+    <div>
+        <div class="descendant"></div>
+    </div>
+</div>
+<div class="adjacent"></div>
+<div class="siblings"></div>
+<div attribute=""></div>
+<div id="id"></div>
+<a></a>
+<span></span>
+<element-2></element-2>
+<element-3></element-3>
+<div class="class-2"></div>
+<element-4></element-4>
+<div class="blue"></div>
