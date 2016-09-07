@@ -1,8 +1,0 @@
-.a { color: red; }
-@media (min-width: 10px) {
- .b:selected { color: red; }
- .c:selected { content: 'mqpseudo:selected'; }
-}
-@media (min-width: 100px) {
- .d:selected { color: blue; }
-}

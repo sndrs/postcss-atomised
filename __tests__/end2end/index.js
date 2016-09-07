@@ -27,6 +27,8 @@ it('renders pseudos properly', test('pseudo'));
 it('renders unatomisable rules properly', test('unatomisable'));
 it('renders expanded shorthand declarations properly', test('longhand'));
 it('renders @font-face declarations properly', test('font-face'));
+it('renders complex css properly', test('complex'));
+it('renders media queries properly', test('mq'));
 
 let instance, page;
 

@@ -71,11 +71,11 @@ const atomise = (css, result, jsonPath) => {
 
     // Create a new postcss object to describe an atomic representation
     // of a declaration
-    function createAtomicRule (decl, selector, atrules) {
+    function createAtomicRule(decl, selector, atrules) {
         return atrules.reduce((rule, atrule) => {
-            const {name, params} = atrule;
-            return postcss.atRule({name, params}).append(rule);
-        }, postcss.rule({selector}).append(decl));
+            const { name, params } = atrule;
+            return postcss.atRule({ name, params }).append(rule);
+        }, postcss.rule({ selector }).append(decl));
     }
 
     // create the store for the hash/atomic rule pairs
@@ -116,7 +116,7 @@ const atomise = (css, result, jsonPath) => {
     result.root.append(newRoot);
 
     // merge media queries and sort by min-width
-    mqpacker.pack(result, {sort: true}).css;
+    mqpacker.pack(result, { sort: true }).css;
 
     // combine any rules that have the same contents
     // e.g. unatomiseable/atomisable ones
@@ -131,6 +131,6 @@ const atomise = (css, result, jsonPath) => {
         );
 };
 
-export default postcss.plugin('postcss-atomised', ({jsonPath = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
+export default postcss.plugin('postcss-atomised', ({ jsonPath = path.resolve(process.cwd(), 'atomic-map.json') } = {}) => {
     return (css, result) => atomise(css, result, jsonPath);
 });
