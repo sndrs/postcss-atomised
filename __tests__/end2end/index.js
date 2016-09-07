@@ -26,6 +26,7 @@ it('renders @supports properly', test('supports'));
 it('renders pseudos properly', test('pseudo'));
 it('renders unatomisable rules properly', test('unatomisable'));
 it('renders expanded shorthand declarations properly', test('longhand'));
+it('renders @font-face declarations properly', test('font-face'));
 
 let instance, page;
 
@@ -56,7 +57,7 @@ function test(fileName) {
         await page.property('content', src);
         const orginalComputedStyles = await getComputedStyles();
 
-        console.log(await page.property('content'));
+        // console.log(await page.property('content'));
 
         const atomisedCSS = await postcss([atomised({jsonPath: mapDest})]).process(src.match(/<style>([\s\S]*)<\/style>/)[1]);
         const atomicMap = reduce(require(mapDest), (atomicMap, atomicClasses, className) => {
@@ -69,7 +70,7 @@ function test(fileName) {
         await page.property('content', atomisedSrc);
         const atomisedComputedStyles = await getComputedStyles();
 
-        console.log(await page.property('content'));
+        // console.log(await page.property('content'));
 
         await del(mapDest);
 
