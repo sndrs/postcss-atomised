@@ -16,7 +16,7 @@ import reduce from 'lodash.reduce';
 import del from 'del';
 import hasha from 'hasha';
 import replaceClasses from 'replace-classes';
-import atomised from '../../src';
+import atomised from '../src';
 
 it('renders chained selectors properly', test('chained-selectors'));
 it('renders overridden declarations properly', test('overrides'));
@@ -51,7 +51,7 @@ const getComputedStyles = () => page.evaluate(function () {
 
 function test(fileName) {
     return async () => {
-        const src = readFileSync(path.resolve(__dirname, 'fixtures', `${fileName}.html`), 'utf8');
+        const src = readFileSync(path.resolve(__dirname, 'end-to-end', `${fileName}.html`), 'utf8');
         const mapDest = path.resolve(__dirname, `.${hasha(src, {algorithm: 'md5'})}.json`);
 
         // console.log(await page.property('content'));
