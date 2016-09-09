@@ -101,6 +101,7 @@ postcss([atomised(options)]).process(css).then(result => {
 
 ## Development
 Run `npm start` to run the Ava test runner in watch mode, or `npm test` for a one-off.
+Node 6 or greater is needed for development.
 
 ## Node.js 0.*
-Node 4 or greater is needed to use it.
+Node 4 or greater is needed to use the plugin.

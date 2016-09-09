@@ -66,7 +66,7 @@
     "build": "rm -rf build && rollup -c",
     "prepublish": "npm run build",
     "postpublish": "rm -rf build && git push --follow-tags",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test": "jest --coverage"
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "test": "jest --verbose --coverage"
   }
 }
