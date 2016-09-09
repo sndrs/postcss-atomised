@@ -9,9 +9,8 @@ const writeFileP = pify(writeFile);
 const mkdirpP = pify(mkdirp);
 
 import postcss from 'postcss';
-import mqpacker from "css-mqpacker";
+import mqpacker from 'css-mqpacker';
 import stats from 'cssstats';
-import chalk from 'chalk';
 
 import mergeRulesBySelector from './lib/merge-rules-by-selector';
 import mergeRulesByDeclarations from './lib/merge-rules-by-declarations';
@@ -54,8 +53,8 @@ const atomise = (css, result, jsonPath) => {
         if (['keyframes', 'font-face'].some(name => name === atRule.name)) {
             newRoot.push(atRule.clone());
             atRule.remove();
-        };
-    })
+        }
+    });
 
     // Pass any rules which don't use single classnames as selectors
     // straight through to the atomic stylesheet (they're not really atomic,
@@ -72,11 +71,11 @@ const atomise = (css, result, jsonPath) => {
 
     // Create a new postcss object to describe an atomic representation
     // of a declaration
-    function createAtomicRule (decl, selector, atrules) {
+    function createAtomicRule(decl, selector, atrules) {
         return atrules.reduce((rule, atrule) => {
-            const {name, params} = atrule;
-            return postcss.atRule({name, params}).append(rule);
-        }, postcss.rule({selector}).append(decl));
+            const { name, params } = atrule;
+            return postcss.atRule({ name, params }).append(rule);
+        }, postcss.rule({ selector }).append(decl));
     }
 
     // create the store for the hash/atomic rule pairs
@@ -108,7 +107,7 @@ const atomise = (css, result, jsonPath) => {
         const mapClassName = className.replace(/^\./g, '');
         if (!atomicMap.hasOwnProperty(mapClassName)) {
             atomicMap[mapClassName] = [];
-        };
+        }
         atomicMap[mapClassName].push(atomicRules[key]);
     });
 
@@ -117,7 +116,7 @@ const atomise = (css, result, jsonPath) => {
     result.root.append(newRoot);
 
     // merge media queries and sort by min-width
-    mqpacker.pack(result, {sort: true}).css;
+    mqpacker.pack(result, { sort: true }).css;
 
     // combine any rules that have the same contents
     // e.g. unatomiseable/atomisable ones
@@ -132,7 +131,6 @@ const atomise = (css, result, jsonPath) => {
         );
 };
 
-export default postcss.plugin('postcss-atomised', ({jsonPath = path.resolve(process.cwd(), 'atomic-map.json')} = {}) => {
+export default postcss.plugin('postcss-atomised', ({ jsonPath = path.resolve(process.cwd(), 'atomic-map.json') } = {}) => {
     return (css, result) => atomise(css, result, jsonPath);
 });
-

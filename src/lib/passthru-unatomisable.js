@@ -8,7 +8,7 @@ export default (css, newRoot, result) => {
         parseSelector(selectors => {
             selectors.each(selector => {
                 const [first, ...rest] = selector.nodes;
-                if (first.type !== "class" || rest.some(selector => selector.type !== 'pseudo')) {
+                if (first.type !== 'class' || rest.some(selector => selector.type !== 'pseudo')) {
                     const newRuleInContext = getContext(rule).reduce((newRule, context) => {
                         if (context !== rule.root()) {
                             const newParent = context.clone();
@@ -24,7 +24,7 @@ export default (css, newRoot, result) => {
                     result.warn(`${chalk.magenta(rule.selector)} cannot be atomised`, { node: rule });
                 }
                 return false;
-            })
+            });
         }).process(rule.selector);
-    })
+    });
 };

@@ -1,8 +1,4 @@
 node_modules
 build
 coverage
-.nyc_output
-
-test/output
-test/atomic-map.json
 .DS_Store

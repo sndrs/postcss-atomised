@@ -6,4 +6,4 @@ export default node => {
         node = node.parent;
     }
     return parents;
-}
+};

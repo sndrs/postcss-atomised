@@ -1,8 +1,0 @@
-.flex {
-    display: flex;
-}
-@supports not (display: flex) {
-    .flex {
-        display: block;
-    }
-}
