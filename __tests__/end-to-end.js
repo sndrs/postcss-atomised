@@ -10,8 +10,7 @@
 import path from 'path';
 import {readFileSync} from 'fs';
 import {create} from 'phantom';
-import postcss from "postcss";
-import perfectionist from 'perfectionist';
+import postcss from 'postcss';
 import reduce from 'lodash.reduce';
 import del from 'del';
 import hasha from 'hasha';
@@ -36,15 +35,15 @@ beforeEach(async () => {
     instance = await create();
     page = await instance.createPage();
     await page.property('viewportSize', { width: 600, height: 1 });
-})
+});
 
 afterEach(async () => {
     await page.close();
     await instance.exit();
-})
+});
 
 const getComputedStyles = () => page.evaluate(function () {
-    return [].slice.call(document.body.getElementsByTagName("*")).map(function (element) {
+    return [].slice.call(document.body.getElementsByTagName('*')).map(function (element) {
         return window.getComputedStyle(element);
     });
 });
@@ -85,5 +84,5 @@ function test(fileName) {
 
         // test what we got back
         expect(orginalComputedStyles).toEqual(atomisedComputedStyles);
-    }
+    };
 }
