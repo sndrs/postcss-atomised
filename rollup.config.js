@@ -6,8 +6,8 @@ export default {
     plugins: [
         babel({
             babelrc: false,
-            presets: ['es2015-rollup']
-        })
+            presets: ['es2015-rollup'],
+        }),
     ],
-    dest: 'build/index.js'
+    dest: 'build/index.js',
 };

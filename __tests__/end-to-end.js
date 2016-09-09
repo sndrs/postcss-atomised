@@ -5,11 +5,9 @@
 //
 // The idea being that if these pass, we're not dropping any style information.
 
-'use strict';
-
 import path from 'path';
-import {readFileSync} from 'fs';
-import {create} from 'phantom';
+import { readFileSync } from 'fs';
+import { create } from 'phantom';
 import postcss from 'postcss';
 import reduce from 'lodash.reduce';
 import del from 'del';
@@ -17,19 +15,8 @@ import hasha from 'hasha';
 import replaceClasses from 'replace-classes';
 import atomised from '../src';
 
-it('renders chained selectors properly', test('chained-selectors'));
-it('renders overridden declarations properly', test('overrides'));
-it('renders @keyframes properly', test('keyframes'));
-it('renders common declarations properly', test('repetition'));
-it('renders @supports properly', test('supports'));
-it('renders pseudos properly', test('pseudo'));
-it('renders unatomisable rules properly', test('unatomisable'));
-it('renders expanded shorthand declarations properly', test('longhand'));
-it('renders @font-face declarations properly', test('font-face'));
-it('renders complex css properly', test('complex'));
-it('renders media queries properly', test('mq'));
-
-let instance, page;
+let instance;
+let page;
 
 beforeEach(async () => {
     instance = await create();
@@ -42,16 +29,18 @@ afterEach(async () => {
     await instance.exit();
 });
 
-const getComputedStyles = () => page.evaluate(function () {
-    return [].slice.call(document.body.getElementsByTagName('*')).map(function (element) {
+/* eslint-disable prefer-arrow-callback */
+const getComputedStyles = () => page.evaluate(function getPhantomComputedStyles() {
+    return [].slice.call(document.body.getElementsByTagName('*')).map(function getTagComputedStyles(element) {
         return window.getComputedStyle(element);
     });
 });
+/* eslint-enable prefer-arrow-callback */
 
 function test(fileName) {
     return async () => {
         const src = readFileSync(path.resolve(__dirname, 'end-to-end', `${fileName}.html`), 'utf8');
-        const mapDest = path.resolve(__dirname, `.${hasha(src, {algorithm: 'md5'})}.json`);
+        const mapDest = path.resolve(__dirname, `.${hasha(src, { algorithm: 'md5' })}.json`);
 
         // console.log(await page.property('content'));
 
@@ -60,11 +49,12 @@ function test(fileName) {
 
         // console.log(await page.property('content'));
 
-        const atomisedCSS = await postcss([atomised({jsonPath: mapDest})]).process(src.match(/<style>([\s\S]*)<\/style>/)[1]);
-        const atomicMap = reduce(require(mapDest), (atomicMap, atomicClasses, className) => {
-            atomicMap[className] = `${className} ${atomicClasses.join(' ')}`;
-            return atomicMap;
-        }, {});
+        const atomisedCSS = await postcss([atomised({ jsonPath: mapDest })]).process(src.match(/<style>([\s\S]*)<\/style>/)[1]);
+        const atomicMap = reduce(require(mapDest), (map, atomicClasses, className) => // eslint-disable-line global-require
+            Object.assign(map, {
+                [className]: `${className} ${atomicClasses.join(' ')}`,
+            })
+        , {});
 
         const atomisedSrc = replaceClasses(src, atomicMap).replace(/(<style>)([\s\S]*)(<\/style>)/, `$1${atomisedCSS.css}$3`);
 
@@ -86,3 +76,15 @@ function test(fileName) {
         expect(orginalComputedStyles).toEqual(atomisedComputedStyles);
     };
 }
+
+it('renders chained selectors properly', test('chained-selectors'));
+it('renders overridden declarations properly', test('overrides'));
+it('renders @keyframes properly', test('keyframes'));
+it('renders common declarations properly', test('repetition'));
+it('renders @supports properly', test('supports'));
+it('renders pseudos properly', test('pseudo'));
+it('renders unatomisable rules properly', test('unatomisable'));
+it('renders expanded shorthand declarations properly', test('longhand'));
+it('renders @font-face declarations properly', test('font-face'));
+it('renders complex css properly', test('complex'));
+it('renders media queries properly', test('mq'));

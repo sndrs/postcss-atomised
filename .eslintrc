@@ -6,7 +6,7 @@
         "jest": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": "airbnb",
     "parser": "babel-eslint",
     "parserOptions": {
         "sourceType": "module"
@@ -27,6 +27,13 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "import/no-extraneous-dependencies": [
+          "error", {
+          "devDependencies": true,
+          "optionalDependencies": false,
+          "peerDependencies": false
+        }],
+        "max-len": 0
     }
 }

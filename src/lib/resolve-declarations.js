@@ -7,8 +7,11 @@ export default css => {
     css.walkRules(rule => {
         const resolvedDecls = [];
         rule.walkDecls(decl => {
-            const {prop} = decl;
-            resolvedDecls.push(postcss.decl({prop, value: resolveProp(rule, prop)}));
+            const { prop } = decl;
+            resolvedDecls.push(postcss.decl({
+                prop,
+                value: resolveProp(rule, prop),
+            }));
         });
         rule.removeAll();
         rule.append(uniqBy(resolvedDecls, 'prop'));
