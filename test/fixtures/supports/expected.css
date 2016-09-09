@@ -1,9 +1,0 @@
-.a {
-    display: flex;
-}
-
-@supports not (display: flex) {
-    .b {
-        display: block;
-    }
-}

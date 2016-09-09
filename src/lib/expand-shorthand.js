@@ -12,7 +12,7 @@ export default css => {
                     return postcss.decl({prop: `${prop}-${key}`, value: sides[key]});
                 }));
             }
-        })
+        });
         if (decl.prop === 'font') {
             const fontProps = parseFont(decl.value);
             decl.replaceWith(Object.keys(fontProps).map(key => {
@@ -20,7 +20,7 @@ export default css => {
                     return postcss.decl({prop: 'line-height', value: fontProps[key]});
                 }
                 return postcss.decl({prop: `font-${key}`, value: fontProps[key].toString()});
-            }))
+            }));
         }
     });
 };

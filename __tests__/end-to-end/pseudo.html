@@ -1,0 +1,47 @@
+<style>
+.pseudo {
+    content: 'pseudo';
+}
+
+.pseudo:hover {
+    content: 'pseudo:hover';
+}
+
+.pseudo-3:hover {
+    content: 'pseudo:hover';
+}
+
+.no-pseudo {
+    content: 'no-pseudo';
+}
+
+.pseudo-2:hover,
+.no-pseudo-2 {
+    content: 'shared no-pseudo/pseudo:hover';
+}
+
+.pseudo:after {
+    content: 'pseudo:after';
+}
+
+.pseudo--double-colon::after {
+    content: 'pseudo::after';
+}
+
+.pseudo--chained:selected:hover {
+    content: 'pseudo:selected:hover';
+}
+
+.pseudo--chained--colon-crazy::selected:disabled::hover {
+    content: 'pseudo::selected:disabled::hover';
+}
+
+</style>
+<div class="pseudo"></div>
+<div class="pseudo-2"></div>
+<div class="pseudo-3"></div>
+<div class="no-pseudo"></div>
+<div class="no-pseudo-2"></div>
+<div class="pseudo--double-colon"></div>
+<div class="pseudo--chained"></div>
+<div class="pseudo--chained--colon-crazy"></div>

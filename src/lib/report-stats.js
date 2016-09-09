@@ -9,5 +9,4 @@ export default (result, stats, colour, description) => {
         plugin:  'postcss-atomised',
         text:     chalk[colour](`${description}${stats.declarations.total} ${pluralise('declaration', stats.declarations.total)} in ${prettyBytes(stats.gzipSize)}.`)
     });
-}
-
+};
