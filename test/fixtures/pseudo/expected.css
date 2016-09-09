@@ -1,8 +1,0 @@
-.a { content: 'pseudo'; }
-.b:hover { content: 'pseudo:hover'; }
-.c { content: 'no-pseudo'; }
-.d:hover, .e { content: 'shared no-pseudo/pseudo:hover'; }
-.f:after { content: 'pseudo:after'; }
-.g:after { content: 'pseudo::after'; }
-.h:selected:hover { content: 'pseudo:selected:hover'; }
-.i:selected:disabled:hover { content: 'pseudo::selected:disabled::hover'; }

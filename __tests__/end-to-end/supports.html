@@ -1,0 +1,11 @@
+<style>
+.flex {
+    display: flex;
+}
+@supports not (display: flex) {
+    .flex {
+        display: block;
+    }
+}
+</style>
+<div class="flex"></div>
