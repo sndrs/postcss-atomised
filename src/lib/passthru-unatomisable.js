@@ -8,16 +8,15 @@ export default (css, newRoot, result) => {
         parseSelector(selectors => {
             selectors.each(selector => {
                 const [first, ...rest] = selector.nodes;
-                if (first.type !== 'class' || rest.some(selector => selector.type !== 'pseudo')) {
+                if (first.type !== 'class' || rest.some(textSelector => textSelector.type !== 'pseudo')) {
                     const newRuleInContext = getContext(rule).reduce((newRule, context) => {
                         if (context !== rule.root()) {
                             const newParent = context.clone();
                             newParent.removeAll();
                             newParent.append(newRule);
                             return newParent;
-                        } else {
-                            return newRule;
                         }
+                        return newRule;
                     }, rule.clone());
                     newRoot.push(newRuleInContext);
                     rule.remove();

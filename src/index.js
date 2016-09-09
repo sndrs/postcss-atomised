@@ -5,9 +5,6 @@ import mkdirp from 'mkdirp';
 import hash from 'shorthash';
 import pify from 'pify';
 
-const writeFileP = pify(writeFile);
-const mkdirpP = pify(mkdirp);
-
 import postcss from 'postcss';
 import mqpacker from 'css-mqpacker';
 import stats from 'cssstats';
@@ -21,6 +18,9 @@ import expandShorthand from './lib/expand-shorthand';
 import numberToLetter from './lib/number-to-letter';
 import reportStats from './lib/report-stats';
 import getContext from './lib/get-context';
+
+const writeFileP = pify(writeFile);
+const mkdirpP = pify(mkdirp);
 
 const atomise = (css, result, jsonPath) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
@@ -92,7 +92,7 @@ const atomise = (css, result, jsonPath) => {
         const key = hash.unique(createAtomicRule(decl, contextPseudos.join(''), contextAtrules).toString());
 
         // if we've not seen this declaration in this context before...
-        if (!atomicRules.hasOwnProperty(key)) {
+        if (!{}.hasOwnProperty.call(atomicRules, key)) {
             // create an atomic rule for it
             const shortClassName = numberToLetter(Object.keys(atomicRules).length);
             const atomicClassName = `.${shortClassName}${contextPseudos.map(p => `:${p}`).join('')}`;
@@ -105,7 +105,7 @@ const atomise = (css, result, jsonPath) => {
         // create a mapping from the selector to which this declaration
         // belongs to the atomic rule which captures it
         const mapClassName = className.replace(/^\./g, '');
-        if (!atomicMap.hasOwnProperty(mapClassName)) {
+        if (!{}.hasOwnProperty.call(atomicMap, mapClassName)) {
             atomicMap[mapClassName] = [];
         }
         atomicMap[mapClassName].push(atomicRules[key]);
@@ -116,7 +116,7 @@ const atomise = (css, result, jsonPath) => {
     result.root.append(newRoot);
 
     // merge media queries and sort by min-width
-    mqpacker.pack(result, { sort: true }).css;
+    mqpacker.pack(result, { sort: true }).css; // eslint-disable-line no-unused-expressions
 
     // combine any rules that have the same contents
     // e.g. unatomiseable/atomisable ones
@@ -131,6 +131,6 @@ const atomise = (css, result, jsonPath) => {
         );
 };
 
-export default postcss.plugin('postcss-atomised', ({ jsonPath = path.resolve(process.cwd(), 'atomic-map.json') } = {}) => {
-    return (css, result) => atomise(css, result, jsonPath);
-});
+export default postcss.plugin('postcss-atomised', ({ jsonPath = path.resolve(process.cwd(), 'atomic-map.json') } = {}) =>
+    (css, result) => atomise(css, result, jsonPath)
+);
