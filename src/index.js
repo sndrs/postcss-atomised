@@ -105,10 +105,7 @@ const atomise = (css, result, jsonPath) => {
         // create a mapping from the selector to which this declaration
         // belongs to the atomic rule which captures it
         const mapClassName = className.replace(/^\./g, '');
-        if (!{}.hasOwnProperty.call(atomicMap, mapClassName)) {
-            atomicMap[mapClassName] = [];
-        }
-        atomicMap[mapClassName].push(atomicRules[key]);
+        atomicMap[mapClassName] = (atomicMap[mapClassName] || []).concat(atomicRules[key]);
     });
 
     // clear out the old css and return the atomic rules
