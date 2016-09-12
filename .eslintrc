@@ -12,6 +12,15 @@
         "sourceType": "module"
     },
     "rules": {
+        "arrow-parens": 0,
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": true,
+                "optionalDependencies": false,
+                "peerDependencies": false
+            }
+        ],
         "indent": [
             "error",
             4
@@ -20,6 +29,7 @@
             "error",
             "unix"
         ],
+        "max-len": 0,
         "quotes": [
             "error",
             "single"
@@ -27,14 +37,6 @@
         "semi": [
             "error",
             "always"
-        ],
-        "import/no-extraneous-dependencies": [
-          "error", {
-          "devDependencies": true,
-          "optionalDependencies": false,
-          "peerDependencies": false
-        }],
-        "max-len": 0,
-        "arrow-parens": 0
+        ]
     }
 }
