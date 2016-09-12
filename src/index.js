@@ -4,6 +4,7 @@ import { writeFile } from 'fs';
 import mkdirp from 'mkdirp';
 import hash from 'shorthash';
 import pify from 'pify';
+import isString from 'lodash.isstring';
 
 import postcss from 'postcss';
 import mqpacker from 'css-mqpacker';
@@ -20,9 +21,8 @@ import reportStats from './lib/report-stats';
 import getContext from './lib/get-context';
 
 const writeFileP = pify(writeFile);
-const mkdirpP = pify(mkdirp);
 
-const atomise = (css, result, jsonPath) => {
+const atomise = (css, result, mapPath, mapHandler) => {
     reportStats(result, stats(css.toString()), 'magenta', 'Found:    ');
 
     // We'll create a new root of atomic classes to eventually return in the result
@@ -121,13 +121,16 @@ const atomise = (css, result, jsonPath) => {
 
     reportStats(result, stats(css.toString()), 'blue', 'Returned: ');
 
-    // save the JSON file
-    return mkdirpP(path.dirname(jsonPath))
-        .then(() =>
-            writeFileP(jsonPath, JSON.stringify(atomicMap, null, 2))
-        );
+    // handle the map
+    mapHandler(atomicMap);
+    if (isString(mapPath)) {
+        mkdirp.sync(path.dirname(mapPath));
+        return writeFileP(mapPath, JSON.stringify(atomicMap, null, 2));
+    }
+    return Promise.resolve;
 };
 
-export default postcss.plugin('postcss-atomised', ({ jsonPath = path.resolve(process.cwd(), 'atomic-map.json') } = {}) =>
-    (css, result) => atomise(css, result, jsonPath)
-);
+export default postcss.plugin('postcss-atomised', ({
+    mapPath = path.resolve(process.cwd(), 'atomised-map.json'),
+    mapHandler = () => {},
+} = {}) => (css, result) => atomise(css, result, mapPath, mapHandler));
