@@ -56,7 +56,8 @@ function test(fileName) {
             })
         , {});
 
-        const atomisedSrc = replaceClasses(src, atomicMap).replace(/(<style>)([\s\S]*)(<\/style>)/, `$1${atomisedCSS.css}$3`);
+        const atomisedSrc = replaceClasses(src, atomicMap)
+            .replace(/(<style>)([\s\S]*)(<\/style>)/, `$1${atomisedCSS.css}$3`);
 
         await page.property('content', atomisedSrc);
         const atomisedComputedStyles = await getComputedStyles();
