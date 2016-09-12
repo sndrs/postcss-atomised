@@ -9,9 +9,6 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import { create } from 'phantom';
 import postcss from 'postcss';
-import reduce from 'lodash.reduce';
-import del from 'del';
-import hasha from 'hasha';
 import replaceClasses from 'replace-classes';
 import atomised from '../src';
 
@@ -40,7 +37,6 @@ const getComputedStyles = () => page.evaluate(function getPhantomComputedStyles(
 function test(fileName) {
     return async () => {
         const src = readFileSync(path.resolve(__dirname, 'end-to-end', `${fileName}.html`), 'utf8');
-        const mapDest = path.resolve(__dirname, `.${hasha(src, { algorithm: 'md5' })}.json`);
 
         // console.log(await page.property('content'));
 
@@ -49,22 +45,27 @@ function test(fileName) {
 
         // console.log(await page.property('content'));
 
-        const atomisedCSS = await postcss([atomised({ jsonPath: mapDest })]).process(src.match(/<style>([\s\S]*)<\/style>/)[1]);
-        const atomicMap = reduce(require(mapDest), (map, atomicClasses, className) => // eslint-disable-line global-require
+        let atomicMap;
+        const atomisedCSS = await postcss([atomised({
+            mapHandler: json => { atomicMap = Object.assign({}, json); },
+            mapPath: null,
+        })])
+            .process(src.match(/<style>([\s\S]*)<\/style>/)[1]);
+
+        // eslint-disable-next-line global-require
+        const stringifiedAtomicMap = Object.keys(atomicMap).reduce((map, className) =>
             Object.assign(map, {
-                [className]: `${className} ${atomicClasses.join(' ')}`,
+                [className]: `${className} ${atomicMap[className].join(' ')}`,
             })
         , {});
 
-        const atomisedSrc = replaceClasses(src, atomicMap)
+        const atomisedSrc = replaceClasses(src, stringifiedAtomicMap)
             .replace(/(<style>)([\s\S]*)(<\/style>)/, `$1${atomisedCSS.css}$3`);
 
         await page.property('content', atomisedSrc);
         const atomisedComputedStyles = await getComputedStyles();
 
         // console.log(await page.property('content'));
-
-        await del(mapDest);
 
         // make sure our processing has done something
         expect(src).not.toEqual(atomisedSrc);

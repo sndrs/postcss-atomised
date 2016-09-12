@@ -34,6 +34,7 @@
           "optionalDependencies": false,
           "peerDependencies": false
         }],
-        "max-len": 0
+        "max-len": 0,
+        "arrow-parens": 0
     }
 }

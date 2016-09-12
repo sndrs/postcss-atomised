@@ -5,11 +5,15 @@
 
 ---
 
-[PostCSS](http://postcss.org) plugin that [atomises](http://www.creativebloq.com/css3/atomic-css-11619006) a standard set of CSS, and provides a json map from the original classes to the atomic ones.
+[PostCSS](http://postcss.org) plugin that [atomises](http://www.creativebloq.com/css3/atomic-css-11619006) a standard set of CSS, and provides a json map from the original classes to the atomised ones.
 
-It will turn this:
+Enables you to write CSS in an insolated, super-modular fashion without worrying about the bloat of duplication (the only way you could serve a smaller stylesheet would be to use fewer styles).
 
-```CSS
+## Example
+Take your stylesheet…
+
+```css
+/* original.css */
 .one {
     background-color: red;
     margin: 1rem;
@@ -24,55 +28,83 @@ It will turn this:
     }
 }
 ```
+Pass it through the plugin…
 
-into this atomised `css`:
+```javascript
+// load the original CSS file and atomise it
 
-```CSS
+import {readFileSync} from 'fs';
+
+import postcss from 'postcss';
+import atomised from 'postcss-atomised';
+
+const css = readFileSync('./original.css', 'utf8');
+const options = {};
+
+postcss([atomised(options)]).process(css).then(result => {
+    // do something with `result`
+});
+```
+
+`result.css` is a String containing the atomised CSS:
+
+```css
 .a { background-color: red; }
 .b { margin-top: 1rem; }
 .c { margin-right: 1rem; }
 .d { margin-bottom: 1rem; }
 .e { margin-left: 1rem; }
 @media (min-width: 100px) {
- .f:hover { background-color: hotpink; }
+    .f:hover { background-color: hotpink; }
 }
 ```
 
-and this json map:
+You now also have a file called `atomised-map.json` in `cwd`.
 
-```JSON
+```javascript
+// atomised-map.json
 {
   "one": ["a", "b", "c"," d", "e"],
   "two": ["a", "b", "f"]
 }
 ```
 
-The idea is that in development, you leave your big stylesheet alone, with sourcemaps etc all intact. In production though, you could inline the atomic CSS and then using the json map, transform the following:
+This can be used to transform your templates.
 
-```HTML
+```html
 <div class="one"></div>
 <div class="two"></div>
 ```
 
-into:
+into…
 
-```HTML
+```html
 <div class="a b c d e f"></div>
 <div class="a c g h"></div>
 ```
 
-This should mean you can the get benefit of writing CSS in an insolated, super-modular fashion without worrying about the bloat of duplication (the only way you could serve a smaller stylesheet would be to use fewer styles).
+## Options
+Type: `Object` | `Null`
 
-### Restrictions
+No options are required. By default, a file called `atomised-map.json` will be written to `cwd` containing the atomised JSON map.
+
+### `options.mapPath`
+Type: (`String` | `Null`) _optional_
+
+
+Alternative location for the atomised JSON map to be saved. `null` will prevent the output being written to disk.
+
+### `options.mapHandler`
+Type: (`Function`) _optional_
+
+Callback function that receives one arguement – the JSON map object.
+
+## Restrictions
 - only single class selectors can be atomised (other selectors will pass straight through)
-- pseudo selectors/elements are fine
-- multiple/duplicate selectors are fine
+- multiple/duplicate and pseudo selectors/elements are fine
 
 | Selector  | Ok |
 |---|---|
-| `.a:b { }`  | :white_check_mark: |
-| `.a, .b { }`  | :white_check_mark:  |
-| `.a { }; .a { }`  | :white_check_mark:  |
 | `.a .b { }`  | :x: |
 | `.a.b { }`  | :x:  |
 | `a { }`  | :x:  |
@@ -83,21 +115,10 @@ This should mean you can the get benefit of writing CSS in an insolated, super-m
 | `a + b { }`  | :x:  |
 | `a ~ b { }`  | :x:  |
 | `*`  | :x:  |
-
-## Usage
-
-```javascript
-import postcss from 'postcss';
-import atomised from 'postcss-atomised';
-
-const options = {
-    jsonPath: 'path/to/json' // atomic map is written to path/to/json.json
-};
-
-postcss([atomised(options)]).process(css).then(result => {
-    // result.css => atomised css
-});
-```
+| `.a:b { }`  | :white_check_mark: |
+| `.a, .b { }`  | :white_check_mark:  |
+| `.a { } .a { }`  | :white_check_mark:  |
+| `.a:hover { }`  | :white_check_mark:  |
 
 ## Development
 Run `npm start` to run the Ava test runner in watch mode, or `npm test` for a one-off.
