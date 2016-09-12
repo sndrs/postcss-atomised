@@ -95,7 +95,7 @@ const atomise = (css, result, jsonPath) => {
         if (!{}.hasOwnProperty.call(atomicRules, key)) {
             // create an atomic rule for it
             const shortClassName = numberToLetter(Object.keys(atomicRules).length);
-            const atomicClassName = `.${shortClassName}${contextPseudos.map(p => `:${p}`).join('')}`;
+            const atomicClassName = `.${shortClassName}${contextPseudos.reduce((pseudos, pseudo) => `${pseudos}:${pseudo}`, '')}`;
             newRoot.push(createAtomicRule(decl, atomicClassName, contextAtrules));
 
             // then store the atomic selector against its hash
