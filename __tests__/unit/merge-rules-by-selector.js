@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import perfectionist from 'perfectionist';
 
-import mergeRulesBySelector from '../src/lib/merge-rules-by-selector';
+import mergeRulesBySelector from '../../src/lib/merge-rules-by-selector';
 
 function parse(css) {
     const src = postcss().process(css).root;

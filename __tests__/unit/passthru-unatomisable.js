@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import perfectionist from 'perfectionist';
 
-import passthruUnatomisable from '../src/lib/passthru-unatomisable.js';
+import passthruUnatomisable from '../../src/lib/passthru-unatomisable.js';
 
 function parse(css) {
     const src = postcss().process(css);

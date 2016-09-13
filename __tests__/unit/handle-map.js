@@ -3,7 +3,7 @@
 import path from 'path';
 import postcss from 'postcss';
 import del from 'del';
-import atomised from '../src';
+import atomised from '../../src';
 
 const defaultLocation = path.resolve(process.cwd(), 'atomised-map.json');
 const testLocation = path.resolve(__dirname, '..', 'test.json');

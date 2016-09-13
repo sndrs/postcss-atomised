@@ -1,4 +1,4 @@
-import numberToLetter from '../src/lib/number-to-letter';
+import numberToLetter from '../../src/lib/number-to-letter';
 
 it('returns values for any number', () => {
     expect(numberToLetter(0)).toBe('a');

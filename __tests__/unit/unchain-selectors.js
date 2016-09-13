@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import perfectionist from 'perfectionist';
 
-import unchainSelectors from '../src/lib/unchain-selectors';
+import unchainSelectors from '../../src/lib/unchain-selectors';
 
 function parse(css) {
     const src = postcss().process(css).root;

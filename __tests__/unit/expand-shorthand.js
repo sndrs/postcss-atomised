@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import perfectionist from 'perfectionist';
 
-import expandShorthand from '../src/lib/expand-shorthand';
+import expandShorthand from '../../src/lib/expand-shorthand';
 
 function parse(css) {
     const src = postcss().process(css).root;

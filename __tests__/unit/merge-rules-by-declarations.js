@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import perfectionist from 'perfectionist';
 
-import mergeRulesByDeclarations from '../src/lib/merge-rules-by-declarations';
+import mergeRulesByDeclarations from '../../src/lib/merge-rules-by-declarations';
 
 function parse(css) {
     const src = postcss().process(css).root;

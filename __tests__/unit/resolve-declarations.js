@@ -1,7 +1,7 @@
 import postcss from 'postcss';
 import perfectionist from 'perfectionist';
 
-import resolveDeclarations from '../src/lib/resolve-declarations';
+import resolveDeclarations from '../../src/lib/resolve-declarations';
 
 function parse(css) {
     const src = postcss().process(css).root;
