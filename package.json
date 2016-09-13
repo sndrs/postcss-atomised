@@ -72,5 +72,13 @@
     "coverage": "cat ./coverage/lcov.info | coveralls",
     "test": "npm run lint && jest --verbose --coverage",
     "lint": "eslint ."
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules",
+      "<rootDir>/build",
+      "<rootDir>/coverage",
+      "__helpers__"
+    ]
   }
 }
