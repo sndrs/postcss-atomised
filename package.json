@@ -52,7 +52,7 @@
     "del": "^2.2.2",
     "eslint": "^3.4.0",
     "eslint-config-airbnb": "^11.0.0",
-    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-import": "^2.1.0",
     "eslint-plugin-jsx-a11y": "^2.2.0",
     "eslint-plugin-react": "^6.2.0",
     "globby": "^6.0.0",
