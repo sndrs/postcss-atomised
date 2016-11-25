@@ -9,7 +9,7 @@ export default css => {
             if (decl.prop === prop) {
                 const sides = parseSides(decl.value);
                 decl.replaceWith(Object.keys(sides).map(key =>
-                    postcss.decl({ prop: `${prop}-${key}`, value: sides[key] })
+                    postcss.decl({ prop: `${prop}-${key}`, value: sides[key] }),
                 ));
             }
         });

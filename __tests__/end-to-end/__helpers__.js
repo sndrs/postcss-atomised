@@ -13,7 +13,7 @@ const getComputedStyles = (page) => page.evaluate(
         return [].slice.call(document.body.getElementsByTagName('*')).map(function getTagComputedStyles(element) {
             return window.getComputedStyle(element);
         });
-    }
+    },
     /* eslint-enable prefer-arrow-callback */
 );
 
