@@ -1,7 +1,7 @@
 # postcss-atomised
 [![npm version](https://badge.fury.io/js/postcss-atomised.svg)](https://badge.fury.io/js/postcss-atomised) [![Build Status](https://travis-ci.org/atomised-css/postcss-atomised.svg?branch=master)](https://travis-ci.org/atomised-css/postcss-atomised) [![Coverage Status](https://coveralls.io/repos/github/atomised-css/postcss-atomised/badge.svg?branch=master)](https://coveralls.io/github/atomised-css/postcss-atomised?branch=master)  [![Dependency Status](https://dependencyci.com/github/atomised-css/postcss-atomised/badge)](https://dependencyci.com/github/atomised-css/postcss-atomised) [![Dependency Status](https://david-dm.org/atomised-css/postcss-atomised.svg)](https://david-dm.org/atomised-css/postcss-atomised) [![devDependency Status](https://david-dm.org/atomised-css/postcss-atomised/dev-status.svg)](https://david-dm.org/atomised-css/postcss-atomised#info=devDependencies)
 
- _“This is under active, initial developement for use on https://github.com/guardian/frontend and is not yet stable. It will get a proper 1.0.0 release when it is.”_ – :construction_worker:
+ _This is probably not stable. It was initially developed for use on [the Guardian website](https://github.com/guardian/frontend), but it feels like it's the wrong solution to the problem of `bloat + complexity`. Leaving it here in case anyone finds it useful or we pick it up again._
 
 ---
 
@@ -121,7 +121,7 @@ Callback function that receives one arguement – the JSON map object.
 | `.a:hover { }`  | :white_check_mark:  |
 
 ## Development
-Run `npm start` to run the Ava test runner in watch mode, or `npm test` for a one-off.
+Run `npm start` to run the test runner in watch mode, or `npm test` for a one-off.
 Node 6 or greater is needed for development.
 
 ## Node.js 0.*
