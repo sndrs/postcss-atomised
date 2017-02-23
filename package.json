@@ -5,14 +5,14 @@
   "main": "build/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atomised-css/postcss-atomised.git"
+    "url": "git+https://github.com/sndrs/postcss-atomised.git"
   },
   "author": "Alex Sanders <a@snd.rs>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/atomised-css/postcss-atomised/issues"
+    "url": "https://github.com/sndrs/postcss-atomised/issues"
   },
-  "homepage": "https://github.com/atomised-css/postcss-atomised#readme",
+  "homepage": "https://github.com/sndrs/postcss-atomised#readme",
   "keywords": [
     "postcss",
     "css",
